@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turn8digital — Web design & build</title>
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="icon" href="favicon-512.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal-900:#0B2E2B;
+    --teal-700:#12433D;
+    --teal-500:#1F6358;
+    --gold-500:#C9A15A;
+    --gold-300:#E4CE9C;
+    --cream-100:#F6F1E7;
+    --cream-50:#FBF8F2;
+    --ink-900:#16211F;
+    --ink-600:#3F4F4C;
+    --line: rgba(246,241,231,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--cream-100);
+    color:var(--ink-900);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:600; letter-spacing:-0.01em;}
+  em{font-style:italic; font-weight:500; color:var(--gold-500);}
+  a{color:inherit; text-decoration:none;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    opacity:0.75;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:22px; height:1px;
+    background:var(--gold-500);
+    display:inline-block;
+  }
+  .eyebrow.gold{color:var(--gold-500); opacity:1;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 32px;}
+
+  /* NAV */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,46,43,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  header.nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:74px;
+  }
+  .logo{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:20px;
+    color:var(--cream-100);
+    letter-spacing:-0.01em;
+  }
+  .logo span{color:var(--gold-500);}
+  nav.links{display:flex; gap:36px;}
+  .nav-actions{display:flex; align-items:center; gap:14px;}
+  nav.links a{
+    color:var(--cream-100);
+    font-size:14px;
+    opacity:0.82;
+    transition:opacity .2s ease;
+  }
+  nav.links a:hover{opacity:1;}
+  .btn-ghost{
+    border:1px solid var(--gold-500);
+    color:var(--gold-300);
+    font-size:13px;
+    padding:9px 18px;
+    border-radius:999px;
+    transition:background .2s ease, color .2s ease;
+    white-space:nowrap;
+  }
+  .btn-ghost:hover{background:var(--gold-500); color:var(--teal-900);}
+
+  /* HERO */
+  .hero{
+    background:radial-gradient(120% 100% at 15% 0%, #123f3a 0%, var(--teal-900) 55%);
+    color:var(--cream-100);
+    padding:88px 0 0;
+    position:relative;
+  }
+  .hero .wrap{
+    display:grid;
+    grid-template-columns:1.2fr 0.8fr;
+    gap:48px;
+    align-items:center;
+    padding-bottom:64px;
+  }
+  .hero-copy h1{
+    font-size:clamp(38px, 5.4vw, 62px);
+    line-height:1.06;
+    margin:22px 0 22px;
+  }
+  .hero-copy p.sub{
+    font-size:17px;
+    line-height:1.6;
+    color:#CFE0DC;
+    max-width:46ch;
+    margin-bottom:34px;
+  }
+  .hero-cta{display:flex; align-items:center; gap:26px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--gold-500);
+    color:var(--teal-900);
+    font-weight:600;
+    font-size:15px;
+    padding:14px 26px;
+    border-radius:999px;
+    display:inline-flex;
+    transition:transform .2s ease, background .2s ease;
+  }
+  .btn-primary:hover{background:var(--gold-300); transform:translateY(-1px);}
+  .btn-text{
+    font-size:14px;
+    color:var(--cream-100);
+    opacity:0.8;
+    border-bottom:1px solid var(--line);
+    padding-bottom:2px;
+  }
+  .btn-text:hover{opacity:1;}
+
+  /* AVATAR / TRUST CARD */
+  .avatar-card{
+    background:var(--teal-700);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:26px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:16px;
+  }
+  .avatar-ring{
+    width:132px; height:132px;
+    border-radius:50%;
+    background:var(--cream-100);
+    overflow:hidden;
+    box-shadow:0 0 0 3px var(--gold-500), 0 0 0 7px rgba(201,161,90,0.18);
+  }
+  .avatar-ring img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .avatar-card .name{font-family:'Fraunces', serif; font-size:17px; color:var(--cream-100);}
+  .avatar-card .role{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-300); opacity:0.85;}
+  .avatar-card .quote{font-size:14px; line-height:1.55; color:#CFE0DC; padding-top:2px;}
+
+  /* infinity divider */
+  .divider{
+    width:100%;
+    display:block;
+    line-height:0;
+  }
+
+  /* SERVICES */
+  .services{padding:96px 0 88px;}
+  .services h2{
+    font-size:clamp(28px, 3.6vw, 40px);
+    max-width:16ch;
+    margin:14px 0 48px;
+    color:var(--ink-900);
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:22px;
+  }
+  .card{
+    background:var(--cream-50);
+    border:1px solid rgba(22,33,31,0.09);
+    border-radius:16px;
+    padding:30px 28px;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .card:hover{border-color:var(--gold-500); transform:translateY(-2px);}
+  .card .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--gold-500);
+    margin-bottom:14px;
+    display:block;
+  }
+  .card h3{font-size:19px; margin-bottom:10px; color:var(--ink-900); font-weight:600;}
+  .card p{font-size:14.5px; line-height:1.6; color:var(--ink-600);}
+
+  /* TRUST STRIP */
+  .trust{
+    background:var(--teal-900);
+    color:var(--cream-100);
+    padding:64px 0;
+  }
+  .trust-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:32px;
+  }
+  .trust-item h3{
+    font-size:17px;
+    color:var(--gold-300);
+    margin-bottom:8px;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+  }
+  .trust-item p{font-size:14px; line-height:1.6; color:#CFE0DC;}
+
+  /* PORTFOLIO / WORK */
+  .portfolio{padding:96px 0 96px; background:var(--cream-100);}
+  .portfolio h2{
+    font-size:clamp(28px, 3.6vw, 40px);
+    max-width:20ch;
+    margin:14px 0 12px;
+  }
+  .portfolio > .wrap > p.lead{
+    font-size:15px;
+    line-height:1.6;
+    color:var(--ink-600);
+    max-width:56ch;
+    margin-bottom:44px;
+  }
+  .portfolio-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
+  }
+  .portfolio-card{
+    background:var(--cream-50);
+    border:1px solid rgba(22,33,31,0.09);
+    border-radius:16px;
+    overflow:hidden;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .portfolio-card:hover{border-color:var(--gold-500); transform:translateY(-2px);}
+  .portfolio-thumb{
+    aspect-ratio:4/3;
+    position:relative;
+    overflow:hidden;
+    background:var(--teal-900);
+  }
+  .portfolio-thumb img{
+    width:100%; height:100%;
+    object-fit:cover;
+    object-position:left top;
+    display:block;
+    transition:transform .3s ease;
+  }
+  .portfolio-card:hover .portfolio-thumb img{transform:scale(1.04);}
+  .portfolio-info{padding:20px 22px 24px;}
+  .portfolio-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--gold-500);
+    display:block;
+    margin-bottom:8px;
+  }
+  .portfolio-info h3{font-size:17px; margin-bottom:8px; font-weight:600;}
+  .portfolio-info p{font-size:13.5px; line-height:1.55; color:var(--ink-600);}
+  .portfolio-subhead{
+    margin-top:72px;
+    padding-top:56px;
+    border-top:1px solid rgba(22,33,31,0.12);
+  }
+  .subhead-title{
+    font-size:24px;
+    margin:12px 0 14px;
+    color:var(--ink-900);
+  }
+  .portfolio-subhead .lead{margin-bottom:36px;}
+  .event-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:16px;
+  }
+  .event-tile{
+    aspect-ratio:1/1;
+    border-radius:16px;
+    overflow:hidden;
+    border:1px solid rgba(22,33,31,0.09);
+  }
+  .event-tile img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform .3s ease;
+  }
+  .event-tile:hover img{transform:scale(1.05);}
+
+  /* PROCESS */
+  .process{padding:96px 0 96px; background:var(--cream-100);}
+  .process h2{
+    font-size:clamp(28px, 3.6vw, 40px);
+    max-width:20ch;
+    margin:14px 0 52px;
+  }
+  .steps{
+    list-style:none;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:0;
+    position:relative;
+  }
+  .steps li{
+    position:relative;
+    padding:0 24px 0 0;
+    border-left:1px solid rgba(22,33,31,0.14);
+    padding-left:24px;
+  }
+  .steps li:first-child{border-left:none; padding-left:0;}
+  .steps .step-num{
+    font-family:'Fraunces', serif;
+    font-size:15px;
+    color:var(--gold-500);
+    display:block;
+    margin-bottom:12px;
+  }
+  .steps h3{font-size:18px; margin-bottom:10px; font-weight:600;}
+  .steps p{font-size:14px; line-height:1.6; color:var(--ink-600);}
+
+  /* CONTACT */
+  .contact{
+    background:var(--teal-900);
+    color:var(--cream-100);
+    padding:110px 0 100px;
+    text-align:center;
+  }
+  .contact .eyebrow{justify-content:center;}
+  .contact .eyebrow::before{display:none;}
+  .contact h2{
+    font-size:clamp(30px, 5vw, 48px);
+    max-width:18ch;
+    margin:18px auto 30px;
+  }
+  .email-link{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:clamp(16px, 2.4vw, 20px);
+    color:var(--gold-300);
+    border-bottom:1px solid var(--gold-500);
+    padding-bottom:4px;
+    transition:color .2s ease;
+  }
+  .email-link:hover{color:var(--gold-500);}
+  .contact .note{margin-top:22px; font-size:13.5px; color:#9EB8B2;}
+
+  footer{
+    background:var(--teal-900);
+    border-top:1px solid var(--line);
+    padding:26px 0;
+    text-align:center;
+  }
+  footer p{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:#9EB8B2;
+    letter-spacing:0.04em;
+  }
+
+  /* GAME BUTTON */
+  .btn-game{
+    border:1px solid var(--gold-500);
+    background:transparent;
+    color:var(--gold-300);
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    font-weight:600;
+    padding:9px 16px;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    cursor:pointer;
+    transition:background .2s ease, color .2s ease;
+    white-space:nowrap;
+  }
+  .btn-game:hover{background:var(--gold-500); color:var(--teal-900);}
+  .btn-game svg{width:14px; height:14px;}
+
+  .game-footer-link{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--gold-300);
+    opacity:0.85;
+    cursor:pointer;
+    background:none;
+    border:none;
+    padding:0;
+    margin-top:10px;
+    display:inline-block;
+  }
+  .game-footer-link:hover{opacity:1; text-decoration:underline;}
+
+  /* GAME MODAL */
+  .game-modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(11,46,43,0.82);
+    backdrop-filter:blur(4px);
+    z-index:200;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .game-modal-overlay.open{display:flex;}
+  .game-modal{
+    background:var(--teal-900);
+    border:1px solid var(--gold-500);
+    border-radius:20px;
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    max-width:380px;
+    width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  }
+  .game-modal-head{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .game-modal-title{
+    font-family:'Fraunces', serif;
+    font-size:17px;
+    color:var(--cream-100);
+  }
+  .game-modal-title span{color:var(--gold-500);}
+  .game-modal-close{
+    background:none;
+    border:none;
+    color:var(--cream-100);
+    opacity:0.7;
+    font-size:22px;
+    line-height:1;
+    cursor:pointer;
+    padding:2px 6px;
+  }
+  .game-modal-close:hover{opacity:1;}
+  .game-modal-back{
+    background:none;
+    border:none;
+    color:var(--gold-300);
+    font-size:18px;
+    line-height:1;
+    cursor:pointer;
+    padding:2px 8px 2px 0;
+  }
+  .game-modal-back:hover{color:var(--gold-500);}
+  .game-select{
+    display:flex;
+    gap:14px;
+    padding:18px 4px 6px;
+  }
+  .game-pick{
+    background:var(--teal-700);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px 18px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    color:var(--cream-100);
+    font-family:'Fraunces', serif;
+    font-size:14px;
+    cursor:pointer;
+    transition:border-color .2s ease, transform .2s ease;
+    flex:1;
+  }
+  .game-pick:hover{border-color:var(--gold-500); transform:translateY(-2px);}
+  .game-pick-emoji{font-size:30px;}
+  .game-stage{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    width:100%;
+  }
+  .tetris-controls{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    width:100%;
+  }
+  .tetris-controls button{
+    background:var(--teal-700);
+    border:1px solid var(--gold-500);
+    color:var(--gold-300);
+    font-size:17px;
+    width:52px;
+    height:44px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:background .2s ease, color .2s ease;
+  }
+  .tetris-controls button:hover,
+  .tetris-controls button:active{background:var(--gold-500); color:var(--teal-900);}
+
+  #flappyCanvas, #tetrisCanvas, #pongCanvas{
+    background:#0A1210;
+    border-radius:12px;
+    border:1px solid var(--line);
+    display:block;
+    touch-action:none;
+    max-width:100%;
+  }
+  .game-modal-hint{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--gold-300);
+    opacity:0.8;
+    text-align:center;
+  }
+
+  /* WHATSAPP FLOAT */
+  .whatsapp-float{
+    position:fixed;
+    bottom:26px;
+    right:26px;
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    background:#25D366;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 6px 18px rgba(11,46,43,0.35);
+    z-index:60;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .whatsapp-float:hover{
+    transform:scale(1.07);
+    box-shadow:0 8px 22px rgba(11,46,43,0.42);
+  }
+  .whatsapp-float svg{width:29px; height:29px;}
+
+  @media (max-width:820px){
+    .hero .wrap{grid-template-columns:1fr; padding-bottom:48px;}
+    .avatar-card{max-width:280px; margin:0 auto;}
+    .grid{grid-template-columns:1fr;}
+    .trust-grid{grid-template-columns:1fr; gap:26px;}
+    .portfolio-grid{grid-template-columns:1fr;}
+    .event-grid{gap:10px;}
+    .portfolio-subhead{margin-top:56px; padding-top:40px;}
+    .steps{grid-template-columns:1fr; gap:28px;}
+    .steps li{border-left:none; padding-left:0; border-top:1px solid rgba(22,33,31,0.14); padding-top:22px;}
+    .steps li:first-child{border-top:none; padding-top:0;}
+    nav.links{display:none;}
+    .btn-game{padding:8px 12px; font-size:12px;}
+    .game-select{flex-direction:column;}
+    .game-modal{max-width:100%;}
+    .whatsapp-float{width:52px; height:52px; bottom:20px; right:20px;}
+    .whatsapp-float svg{width:26px; height:26px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <div class="logo">Turn8<span>digital</span></div>
+    <nav class="links">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#process">Process</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn-game" id="openGameBtn" aria-haspopup="dialog">🎮 Play a game</button>
+      <a class="btn-ghost" href="mailto:turn8digital@gmail.com">Get a quote</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <p class="eyebrow">Web design & build studio</p>
+      <h1>Your business,<br>live on the web —<br><em>done right.</em></h1>
+      <p class="sub">Turn8digital designs and builds quality websites for businesses. We help turn your business into a living personality on the internet, the right way.</p>
+      <div class="hero-cta">
+        <a class="btn-primary" href="mailto:turn8digital@gmail.com">Start your site</a>
+        <a class="btn-text" href="#process">See how it works ↓</a>
+      </div>
+    </div>
+
+    <div class="avatar-card">
+      <div class="avatar-ring">
+        <img src="mark-portrait.jpg" alt="Mark, founder of Turn8digital">
+      </div>
+      <div class="name">Hey, I'm Mark 👋</div>
+      <div class="role">Founder, Turn8digital</div>
+      <p class="quote">At Turn8digital each project is handled with a capable team in a timely manner. What you can always count on are quality products with punctual delivery.</p>
+    </div>
+  </div>
+
+  <svg class="divider" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,90 L1200,90 L1200,60 C1000,10 900,70 750,45 C650,28 620,28 520,45 C420,62 350,10 200,30 C120,42 60,58 0,50 Z" fill="#F6F1E7"/>
+  </svg>
+</section>
+
+<section class="services" id="services">
+  <div class="wrap">
+    <p class="eyebrow gold">What does Turn8digital do?</p>
+    <h2>Builds your business an online personality</h2>
+    <div class="grid">
+      <div class="card">
+        <span class="num">01</span>
+        <h3>Business websites</h3>
+        <p>The digital front door for your business' — voice, offer, and value. Available on a global scale</p>
+      </div>
+      <div class="card">
+        <span class="num">02</span>
+        <h3>Refresh & fixes</h3>
+        <p>Already have a site that doesn't feel like your current business anymore? We reinvent it to your current model and speed— faster, sharper, and up to date.</p>
+      </div>
+      <div class="card">
+        <span class="num">03</span>
+        <h3>Ongoing care</h3>
+        <p>As your business grows, your site must grow with it. We stay available for updates and additions, whenever you need them.</p>
+      </div>
+      <div class="card">
+        <span class="num">04</span>
+        <h3>Event coverage</h3>
+        <p>Photography and videography for the moments around your business — launches, gatherings, milestones. Clean footage, delivered fast.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust">
+  <div class="wrap">
+    <p class="eyebrow">Why work with Turn8digital?</p>
+    <div class="trust-grid" style="margin-top:36px;">
+      <div class="trust-item">
+        <h3>Flexible Prices</h3>
+        <p>We value our work and our clients. No fixed pricing, all open negotiations to a mutual agreement.</p>
+      </div>
+      <div class="trust-item">
+        <h3>Real communication</h3>
+        <p>You can count on timely and periodic updates on project progress even without requests. We value your thoughts so we include you in the building process and help turn your ideas into results.</p>
+      </div>
+      <div class="trust-item">
+        <h3>Built to last</h3>
+        <p>Every site is built on clean, modern and flexible foundations — so it stays liquid and doesn't need reinventing ever so often.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="portfolio" id="work">
+  <div class="wrap">
+    <p class="eyebrow gold">Selected work</p>
+    <h2>A few businesses we've turned into a personality online</h2>
+    <p class="lead">Real sites, built and shipped for real local businesses.</p>
+    <div class="portfolio-grid">
+      <div class="portfolio-card">
+        <div class="portfolio-thumb"><img src="roma-cafe-shot.jpg" alt="ROMA Cafe website homepage"></div>
+        <div class="portfolio-info">
+          <span class="portfolio-tag">Café</span>
+          <h3>ROMA Cafe</h3>
+          <p>A warm, appetite-first site built to get a local café found and remembered online.</p>
+        </div>
+      </div>
+      <div class="portfolio-card">
+        <div class="portfolio-thumb"><img src="noor-cafe-shot.jpg" alt="Noor Cafe Bungoma website homepage"></div>
+        <div class="portfolio-info">
+          <span class="portfolio-tag">Café</span>
+          <h3>Noor Cafe</h3>
+          <p>A clean, inviting online front door built around Noor's own menu and voice.</p>
+        </div>
+      </div>
+      <div class="portfolio-card">
+        <div class="portfolio-thumb"><img src="samkiz-shot.jpg" alt="Samkiz Concrete Works website homepage"></div>
+        <div class="portfolio-info">
+          <span class="portfolio-tag">Construction</span>
+          <h3>Samkiz Concrete Works</h3>
+          <p>A straightforward, trust-building site showcasing capability for a concrete works business.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="portfolio-subhead">
+      <p class="eyebrow gold">Event coverage</p>
+      <h3 class="subhead-title">Behind the lens</h3>
+      <p class="lead">Photography from real client events — corporate gatherings, celebrations, and the moments worth keeping.</p>
+    </div>
+    <div class="event-grid">
+      <div class="event-tile"><img src="event-1.jpg" alt="Guests seated at a corporate event"></div>
+      <div class="event-tile"><img src="event-2.jpg" alt="Group photo of event attendees"></div>
+      <div class="event-tile"><img src="event-3.jpg" alt="Cake presentation at a celebration"></div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="wrap">
+    <p class="eyebrow">How it works</p>
+    <h2>Three steps, then results</h2>
+    <ol class="steps">
+      <li>
+        <span class="step-num">01</span>
+        <h3>Tell me about your business</h3>
+        <p>A proper conversation about who you are, what it is you do, who you serve, and what you'd like people to feel and see the moment they land on your page.</p>
+      </li>
+      <li>
+        <span class="step-num">02</span>
+        <h3>Design & build</h3>
+        <p>You get to witness your business take shape into a whole personality on the internet. Prompt updates and inclusion in the whole process so everything about your business is displayed as it should be.</p>
+      </li>
+      <li>
+        <span class="step-num">03</span>
+        <h3>Your site goes live</h3>
+        <p>Once you're happy with it, it goes live — and we remain reliable for anything you need after.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <p class="eyebrow">Let's talk</p>
+    <h2>Ready to give your business its online personality?</h2>
+    <a class="email-link" href="mailto:turn8digital@gmail.com">turn8digital</a>
+    <p class="note">Shoot us an email, or message us on WhatsApp.</p>
+  </div>
+</section>
+
+<footer>
+  <p>TURN8DIGITAL — WEB DESIGN & BUILD</p>
+</footer>
+
+<a class="whatsapp-float" href="https://wa.me/254768633370" target="_blank" rel="noopener" aria-label="Chat with Turn8digital on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.868-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.29.173-1.413-.074-.124-.272-.198-.57-.347z" fill="#fff"/>
+    <path d="M12.01 2C6.486 2 2 6.486 2 12.01c0 1.85.5 3.63 1.446 5.19L2 22l4.94-1.42a9.96 9.96 0 0 0 5.07 1.39h.004c5.524 0 10.01-4.486 10.01-10.01C21.02 6.487 16.534 2 12.01 2zm0 18.13h-.003a8.13 8.13 0 0 1-4.15-1.135l-.298-.177-3.05.876.85-2.98-.194-.306a8.1 8.1 0 0 1-1.24-4.34c0-4.49 3.654-8.14 8.145-8.14 4.49 0 8.14 3.653 8.14 8.14 0 4.49-3.653 8.145-8.14 8.145z" fill="#fff"/>
+  </svg>
+</a>
+
+<div class="game-modal-overlay" id="gameOverlay" role="dialog" aria-modal="true" aria-label="Turn8digital arcade">
+  <div class="game-modal">
+    <div class="game-modal-head">
+      <button class="game-modal-back" id="backGameBtn" aria-label="Back to game menu" style="display:none;">&larr;</button>
+      <div class="game-modal-title" id="gameTitle">Turn8 <span>Arcade</span></div>
+      <button class="game-modal-close" id="closeGameBtn" aria-label="Close game">&times;</button>
+    </div>
+
+    <div class="game-select" id="gameSelect">
+      <button class="game-pick" data-game="pong">
+        <span class="game-pick-emoji">🏓</span>
+        <span>Pong</span>
+      </button>
+      <button class="game-pick" data-game="tetris">
+        <span class="game-pick-emoji">🧱</span>
+        <span>Tetris</span>
+      </button>
+      <button class="game-pick" data-game="flappy">
+        <span class="game-pick-emoji">🐦</span>
+        <span>Flappy T8</span>
+      </button>
+    </div>
+
+    <div class="game-stage" id="gameStage" style="display:none;">
+      <canvas id="flappyCanvas" width="320" height="440"></canvas>
+      <canvas id="tetrisCanvas" width="200" height="400" style="display:none;"></canvas>
+      <canvas id="pongCanvas" width="300" height="200" style="display:none;"></canvas>
+      <p class="game-modal-hint" id="gameHint"></p>
+      <div class="tetris-controls" id="tetrisControls" style="display:none;">
+        <button type="button" data-action="left" aria-label="Move left">◀</button>
+        <button type="button" data-action="rotate" aria-label="Rotate">⟳</button>
+        <button type="button" data-action="down" aria-label="Soft drop">▼</button>
+        <button type="button" data-action="right" aria-label="Move right">▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var overlay = document.getElementById('gameOverlay');
+  var openBtn = document.getElementById('openGameBtn');
+  var closeBtn = document.getElementById('closeGameBtn');
+  var backBtn = document.getElementById('backGameBtn');
+  var titleEl = document.getElementById('gameTitle');
+  var selectScreen = document.getElementById('gameSelect');
+  var stage = document.getElementById('gameStage');
+  var hint = document.getElementById('gameHint');
+  var tetrisControls = document.getElementById('tetrisControls');
+
+  var flappyCanvas = document.getElementById('flappyCanvas');
+  var tetrisCanvas = document.getElementById('tetrisCanvas');
+  var pongCanvas = document.getElementById('pongCanvas');
+
+  var GOLD = '#C9A15A';
+  var GOLD_LIGHT = '#E4CE9C';
+  var TEAL_DARK = '#0B2E2B';
+  var TEAL_MID = '#12433D';
+  var TEAL_SOFT = '#1F6358';
+  var CREAM = '#F6F1E7';
+  var BG_FLAT = '#0A1210';
+
+  var loop = null;
+  var currentGame = null; // 'flappy' | 'tetris'
+
+  /* ---------------- FLAPPY T8 ---------------- */
+  var Flappy = (function(){
+    var canvas = flappyCanvas, ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+    var birdImg = new Image();
+    birdImg.src = 'apple-touch-icon.png';
+
+    var state, bird, pipes, frame, score, best = 0;
+    var GRAVITY = 0.45, FLAP = -7.6, PIPE_GAP = 132, PIPE_W = 52, PIPE_SPEED = 2.4, PIPE_INTERVAL = 95;
+
+    function reset(){
+      bird = { x: W*0.28, y: H/2, vy: 0, r: 16 };
+      pipes = [];
+      frame = 0;
+      score = 0;
+      state = 'ready';
+      hint.textContent = 'Tap, click, or press space to flap';
+    }
+
+    function input(){
+      if(state === 'ready'){ state = 'playing'; hint.textContent = ''; }
+      else if(state === 'playing'){ bird.vy = FLAP; }
+      else if(state === 'over'){ reset(); }
+    }
+
+    function spawnPipe(){
+      var margin = 40;
+      var top = margin + Math.random() * (H - PIPE_GAP - margin*2);
+      pipes.push({ x: W + 10, top: top, passed: false });
+    }
+
+    function gameOver(){
+      state = 'over';
+      if(score > best) best = score;
+      hint.textContent = 'Game over — tap to try again';
+    }
+
+    function update(){
+      if(state !== 'playing') return;
+      frame++;
+      bird.vy += GRAVITY;
+      bird.y += bird.vy;
+      if(frame % PIPE_INTERVAL === 0) spawnPipe();
+
+      for(var i = pipes.length - 1; i >= 0; i--){
+        var p = pipes[i];
+        p.x -= PIPE_SPEED;
+        if(!p.passed && p.x + PIPE_W < bird.x - bird.r){ p.passed = true; score++; }
+        var hitX = bird.x + bird.r > p.x && bird.x - bird.r < p.x + PIPE_W;
+        var hitY = bird.y - bird.r < p.top || bird.y + bird.r > p.top + PIPE_GAP;
+        if(hitX && hitY) gameOver();
+        if(p.x + PIPE_W < -10) pipes.splice(i, 1);
+      }
+      if(bird.y + bird.r > H || bird.y - bird.r < 0) gameOver();
+    }
+
+    function draw(){
+      ctx.fillStyle = BG_FLAT;
+      ctx.fillRect(0,0,W,H);
+
+      pipes.forEach(function(p){
+        ctx.fillStyle = TEAL_SOFT; ctx.strokeStyle = GOLD; ctx.lineWidth = 3;
+        ctx.fillRect(p.x, 0, PIPE_W, p.top);
+        ctx.strokeRect(p.x, 0, PIPE_W, p.top);
+        ctx.fillRect(p.x, p.top + PIPE_GAP, PIPE_W, H - (p.top + PIPE_GAP));
+        ctx.strokeRect(p.x, p.top + PIPE_GAP, PIPE_W, H - (p.top + PIPE_GAP));
+        ctx.fillStyle = GOLD;
+        ctx.fillRect(p.x - 3, p.top - 10, PIPE_W + 6, 10);
+        ctx.fillRect(p.x - 3, p.top + PIPE_GAP, PIPE_W + 6, 10);
+      });
+
+      ctx.save();
+      ctx.translate(bird.x, bird.y);
+      var angle = Math.max(-0.5, Math.min(0.9, bird.vy / 10));
+      ctx.rotate(angle);
+
+      var wingFlap = Math.sin(frame * 0.35) * 0.5;
+      [-1, 1].forEach(function(side){
+        ctx.save();
+        ctx.translate(side * bird.r * 0.8, bird.r * 0.1);
+        ctx.rotate(side * wingFlap);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, bird.r * 0.55, bird.r * 0.28, 0, 0, Math.PI * 2);
+        ctx.fillStyle = GOLD;
+        ctx.fill();
+        ctx.strokeStyle = GOLD_LIGHT;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      ctx.beginPath(); ctx.arc(0, 0, bird.r, 0, Math.PI*2);
+      ctx.fillStyle = GOLD_LIGHT; ctx.fill();
+      ctx.strokeStyle = GOLD; ctx.lineWidth = 2; ctx.stroke();
+      if(birdImg.complete && birdImg.naturalWidth){
+        ctx.save(); ctx.beginPath(); ctx.arc(0,0,bird.r-2,0,Math.PI*2); ctx.clip();
+        ctx.drawImage(birdImg, -bird.r, -bird.r, bird.r*2, bird.r*2);
+        ctx.restore();
+      }
+      ctx.restore();
+
+      ctx.fillStyle = CREAM; ctx.font = '600 26px Fraunces, serif'; ctx.textAlign = 'center';
+      ctx.fillText(score, W/2, 50);
+      ctx.font = '11px "IBM Plex Mono", monospace'; ctx.fillStyle = GOLD_LIGHT; ctx.globalAlpha = 0.85;
+      ctx.fillText('BEST ' + best, W/2, 68); ctx.globalAlpha = 1;
+
+      if(state === 'ready'){
+        ctx.fillStyle = CREAM; ctx.font = '600 20px Fraunces, serif';
+        ctx.fillText('Flappy T8', W/2, H/2 - 20);
+        ctx.font = '12px "IBM Plex Mono", monospace'; ctx.fillStyle = GOLD_LIGHT;
+        ctx.fillText('tap / click / space to start', W/2, H/2 + 10);
+      }
+      if(state === 'over'){
+        ctx.fillStyle = 'rgba(11,46,43,0.55)'; ctx.fillRect(0,0,W,H);
+        ctx.fillStyle = CREAM; ctx.font = '600 22px Fraunces, serif';
+        ctx.fillText('Game over', W/2, H/2 - 8);
+        ctx.font = '12px "IBM Plex Mono", monospace'; ctx.fillStyle = GOLD_LIGHT;
+        ctx.fillText('tap to try again', W/2, H/2 + 18);
+      }
+    }
+
+    function onKey(e){
+      if(e.code === 'Space'){ e.preventDefault(); input(); }
+    }
+
+    return { reset: reset, update: update, draw: draw, input: input, onKey: onKey, canvas: canvas };
+  })();
+
+  /* ---------------- TETRIS T8 ---------------- */
+  var Tetris = (function(){
+    var canvas = tetrisCanvas, ctx = canvas.getContext('2d');
+    var COLS = 10, ROWS = 20, BLOCK = 20;
+    var W = canvas.width, H = canvas.height;
+
+    var SHAPES = {
+      I: [[1,1,1,1]],
+      O: [[1,1],[1,1]],
+      T: [[0,1,0],[1,1,1]],
+      S: [[0,1,1],[1,1,0]],
+      Z: [[1,1,0],[0,1,1]],
+      J: [[1,0,0],[1,1,1]],
+      L: [[0,0,1],[1,1,1]]
+    };
+    var COLORS = {
+      I: GOLD, O: GOLD_LIGHT, T: TEAL_SOFT, S: '#2C7A6C', Z: '#8C6239', J: '#5FA79A', L: '#D9B978'
+    };
+    var KEYS = Object.keys(SHAPES);
+
+    var board, piece, score, best = 0, dropTimer, dropInterval, state;
+
+    function newPiece(){
+      var key = KEYS[Math.floor(Math.random()*KEYS.length)];
+      var shape = SHAPES[key].map(function(row){ return row.slice(); });
+      return { shape: shape, key: key, x: Math.floor(COLS/2) - Math.ceil(shape[0].length/2), y: 0 };
+    }
+
+    function reset(){
+      board = [];
+      for(var r=0;r<ROWS;r++) board.push(new Array(COLS).fill(0));
+      piece = newPiece();
+      score = 0;
+      dropInterval = 45;
+      dropTimer = 0;
+      state = 'ready';
+      hint.textContent = 'Tap ⟳ or Up to start · swipe or use buttons to move';
+    }
+
+    function collide(shape, ox, oy){
+      for(var y=0;y<shape.length;y++){
+        for(var x=0;x<shape[y].length;x++){
+          if(!shape[y][x]) continue;
+          var by = oy + y, bx = ox + x;
+          if(bx < 0 || bx >= COLS || by >= ROWS) return true;
+          if(by >= 0 && board[by][bx]) return true;
+        }
+      }
+      return false;
+    }
+
+    function merge(){
+      piece.shape.forEach(function(row, y){
+        row.forEach(function(val, x){
+          if(val){
+            var by = piece.y + y, bx = piece.x + x;
+            if(by >= 0) board[by][bx] = piece.key;
+          }
+        });
+      });
+    }
+
+    function clearLines(){
+      var cleared = 0;
+      for(var r = ROWS - 1; r >= 0; r--){
+        if(board[r].every(function(c){ return c; })){
+          board.splice(r,1);
+          board.unshift(new Array(COLS).fill(0));
+          cleared++; r++;
+        }
+      }
+      if(cleared){
+        score += cleared * 100;
+        dropInterval = Math.max(12, dropInterval - cleared * 2);
+      }
+    }
+
+    function rotateShape(shape){
+      var rows = shape.length, cols = shape[0].length;
+      var res = [];
+      for(var x=0;x<cols;x++){
+        var row = [];
+        for(var y=rows-1;y>=0;y--) row.push(shape[y][x]);
+        res.push(row);
+      }
+      return res;
+    }
+
+    function lockPiece(){
+      merge();
+      clearLines();
+      piece = newPiece();
+      if(collide(piece.shape, piece.x, piece.y)){
+        gameOver();
+      }
+    }
+
+    function gameOver(){
+      state = 'over';
+      if(score > best) best = score;
+      hint.textContent = 'Game over — tap ⟳ to try again';
+    }
+
+    function moveLeft(){ if(state==='playing' && !collide(piece.shape, piece.x-1, piece.y)) piece.x--; }
+    function moveRight(){ if(state==='playing' && !collide(piece.shape, piece.x+1, piece.y)) piece.x++; }
+    function softDrop(){ if(state==='playing' && !collide(piece.shape, piece.x, piece.y+1)) piece.y++; else if(state==='playing') lockPiece(); }
+    function rotate(){
+      if(state !== 'playing') return;
+      var r = rotateShape(piece.shape);
+      var kicks = [0,-1,1,-2,2];
+      for(var i=0;i<kicks.length;i++){
+        if(!collide(r, piece.x+kicks[i], piece.y)){
+          piece.shape = r; piece.x += kicks[i]; return;
+        }
+      }
+    }
+
+    function input(action){
+      if(state === 'ready' || state === 'over'){
+        if(state === 'over') reset();
+        state = 'playing';
+        hint.textContent = '';
+        return;
+      }
+      if(action === 'left') moveLeft();
+      else if(action === 'right') moveRight();
+      else if(action === 'down') softDrop();
+      else if(action === 'rotate') rotate();
+    }
+
+    function update(){
+      if(state !== 'playing') return;
+      dropTimer++;
+      if(dropTimer >= dropInterval){
+        dropTimer = 0;
+        if(!collide(piece.shape, piece.x, piece.y+1)) piece.y++;
+        else lockPiece();
+      }
+    }
+
+    function drawCell(x, y, color){
+      ctx.fillStyle = color;
+      ctx.fillRect(x*BLOCK+1, y*BLOCK+1, BLOCK-2, BLOCK-2);
+      ctx.strokeStyle = 'rgba(11,18,16,0.4)';
+      ctx.strokeRect(x*BLOCK+1, y*BLOCK+1, BLOCK-2, BLOCK-2);
+    }
+
+    function draw(){
+      ctx.fillStyle = BG_FLAT;
+      ctx.fillRect(0,0,W,H);
+
+      ctx.strokeStyle = 'rgba(246,241,231,0.05)';
+      ctx.lineWidth = 1;
+      for(var gx=1; gx<COLS; gx++){
+        ctx.beginPath(); ctx.moveTo(gx*BLOCK, 0); ctx.lineTo(gx*BLOCK, H); ctx.stroke();
+      }
+      for(var gy=1; gy<ROWS; gy++){
+        ctx.beginPath(); ctx.moveTo(0, gy*BLOCK); ctx.lineTo(W, gy*BLOCK); ctx.stroke();
+      }
+
+      for(var y=0;y<ROWS;y++){
+        for(var x=0;x<COLS;x++){
+          if(board[y][x]) drawCell(x,y,COLORS[board[y][x]]);
+        }
+      }
+      if(state === 'playing' || state === 'ready'){
+        piece.shape.forEach(function(row, y){
+          row.forEach(function(val, x){
+            if(val) drawCell(piece.x+x, piece.y+y, COLORS[piece.key]);
+          });
+        });
+      }
+
+      ctx.fillStyle = CREAM; ctx.font = '600 16px Fraunces, serif'; ctx.textAlign = 'left';
+      ctx.fillText('Score ' + score, 8, 20);
+      ctx.font = '10px "IBM Plex Mono", monospace'; ctx.fillStyle = GOLD_LIGHT; ctx.globalAlpha = 0.85;
+      ctx.fillText('BEST ' + best, 8, 34); ctx.globalAlpha = 1;
+
+      if(state === 'ready'){
+        ctx.fillStyle = 'rgba(11,46,43,0.55)'; ctx.fillRect(0,0,W,H);
+        ctx.fillStyle = CREAM; ctx.textAlign = 'center'; ctx.font = '600 18px Fraunces, serif';
+        ctx.fillText('Tetris', W/2, H/2 - 10);
+        ctx.font = '11px "IBM Plex Mono", monospace'; ctx.fillStyle = GOLD_LIGHT;
+        ctx.fillText('tap ⟳ or ↑ to start', W/2, H/2 + 12);
+      }
+      if(state === 'over'){
+        ctx.fillStyle = 'rgba(11,46,43,0.55)'; ctx.fillRect(0,0,W,H);
+        ctx.fillStyle = CREAM; ctx.textAlign = 'center'; ctx.font = '600 18px Fraunces, serif';
+        ctx.fillText('Game over', W/2, H/2 - 10);
+        ctx.font = '11px "IBM Plex Mono", monospace'; ctx.fillStyle = GOLD_LIGHT;
+        ctx.fillText('tap ⟳ to try again', W/2, H/2 + 12);
+      }
+    }
+
+    function onKey(e){
+      var map = { ArrowLeft:'left', ArrowRight:'right', ArrowDown:'down', ArrowUp:'rotate' };
+      if(map[e.code] || e.code === 'ArrowUp'){
+        e.preventDefault();
+        input(map[e.code]);
+      }
+    }
+
+    return { reset: reset, update: update, draw: draw, input: input, onKey: onKey, canvas: canvas };
+  })();
+
+  /* ---------------- PONG T8 ---------------- */
+  var Pong = (function(){
+    var canvas = pongCanvas, ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+    var PAD_W = 8, PAD_H = 44, PAD_SPEED_AI = 3.2, WIN_SCORE = 5;
+
+    var player, ai, ball, scorePlayer, scoreAi, state;
+
+    function centerBall(dir){
+      var speed = 3.2;
+      var angle = (Math.random() * 0.6 - 0.3);
+      return {
+        x: W/2, y: H/2, r: 5,
+        vx: Math.cos(angle) * speed * dir,
+        vy: Math.sin(angle) * speed
+      };
+    }
+
+    function reset(){
+      player = { y: H/2 - PAD_H/2 };
+      ai = { y: H/2 - PAD_H/2 };
+      ball = centerBall(Math.random() < 0.5 ? 1 : -1);
+      scorePlayer = 0; scoreAi = 0;
+      state = 'ready';
+      hint.textContent = 'Drag/tap to move your paddle — tap to serve';
+    }
+
+    function input(){
+      if(state === 'ready' || state === 'over'){
+        if(state === 'over') reset();
+        state = 'playing';
+        hint.textContent = '';
+      }
+    }
+
+    function drag(y){
+      player.y = Math.max(0, Math.min(H - PAD_H, y - PAD_H/2));
+    }
+
+    function serveAfterScore(dir){
+      ball = centerBall(dir);
+    }
+
+    function endGame(){
+      state = 'over';
+      hint.textContent = (scorePlayer > scoreAi ? 'You win!' : 'AI wins') + ' — tap to play again';
+    }
+
+    function update(){
+      if(state !== 'playing') return;
+
+      var target = ball.y - PAD_H/2 + (Math.random()-0.5) * 8;
+      if(ai.y < target) ai.y = Math.min(ai.y + PAD_SPEED_AI, target);
+      else if(ai.y > target) ai.y = Math.max(ai.y - PAD_SPEED_AI, target);
+      ai.y = Math.max(0, Math.min(H - PAD_H, ai.y));
+
+      ball.x += ball.vx;
+      ball.y += ball.vy;
+
+      if(ball.y - ball.r < 0){ ball.y = ball.r; ball.vy *= -1; }
+      if(ball.y + ball.r > H){ ball.y = H - ball.r; ball.vy *= -1; }
+
+      var pX = 14;
+      if(ball.vx < 0 && ball.x - ball.r < pX + PAD_W && ball.x - ball.r > pX - 6 &&
+         ball.y > player.y && ball.y < player.y + PAD_H){
+        ball.x = pX + PAD_W + ball.r;
+        ball.vx = Math.abs(ball.vx) * 1.05;
+        var hit = (ball.y - (player.y + PAD_H/2)) / (PAD_H/2);
+        ball.vy = hit * 4;
+      }
+
+      var aX = W - 14 - PAD_W;
+      if(ball.vx > 0 && ball.x + ball.r > aX && ball.x + ball.r < aX + 6 + PAD_W &&
+         ball.y > ai.y && ball.y < ai.y + PAD_H){
+        ball.x = aX - ball.r;
+        ball.vx = -Math.abs(ball.vx) * 1.05;
+        var hitA = (ball.y - (ai.y + PAD_H/2)) / (PAD_H/2);
+        ball.vy = hitA * 4;
+      }
+
+      if(ball.x < -10){
+        scoreAi++;
+        if(scoreAi >= WIN_SCORE) endGame(); else serveAfterScore(1);
+      }
+      if(ball.x > W + 10){
+        scorePlayer++;
+        if(scorePlayer >= WIN_SCORE) endGame(); else serveAfterScore(-1);
+      }
+    }
+
+    function draw(){
+      ctx.fillStyle = BG_FLAT;
+      ctx.fillRect(0,0,W,H);
+
+      ctx.strokeStyle = 'rgba(246,241,231,0.12)';
+      ctx.setLineDash([5,7]);
+      ctx.beginPath(); ctx.moveTo(W/2, 0); ctx.lineTo(W/2, H); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = GOLD_LIGHT;
+      ctx.fillRect(14, player.y, PAD_W, PAD_H);
+      ctx.fillStyle = GOLD;
+      ctx.fillRect(W - 14 - PAD_W, ai.y, PAD_W, PAD_H);
+
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2);
+      ctx.fillStyle = CREAM;
+      ctx.fill();
+
+      ctx.fillStyle = CREAM; ctx.font = '600 22px Fraunces, serif'; ctx.textAlign = 'center';
+      ctx.fillText(scorePlayer, W/2 - 40, 30);
+      ctx.fillStyle = GOLD_LIGHT;
+      ctx.fillText(scoreAi, W/2 + 40, 30);
+
+      if(state === 'ready'){
+        ctx.fillStyle = CREAM; ctx.font = '600 18px Fraunces, serif';
+        ctx.fillText('Pong', W/2, H/2 - 6);
+        ctx.font = '11px "IBM Plex Mono", monospace'; ctx.fillStyle = GOLD_LIGHT;
+        ctx.fillText('tap to serve', W/2, H/2 + 14);
+      }
+      if(state === 'over'){
+        ctx.fillStyle = 'rgba(11,18,16,0.6)'; ctx.fillRect(0,0,W,H);
+        ctx.fillStyle = CREAM; ctx.font = '600 18px Fraunces, serif';
+        ctx.fillText(scorePlayer > scoreAi ? 'You win!' : 'AI wins', W/2, H/2 - 6);
+        ctx.font = '11px "IBM Plex Mono", monospace'; ctx.fillStyle = GOLD_LIGHT;
+        ctx.fillText('tap to play again', W/2, H/2 + 14);
+      }
+    }
+
+    function onKey(e){
+      if(e.code === 'ArrowUp'){ e.preventDefault(); drag(player.y + PAD_H/2 - 18); }
+      if(e.code === 'ArrowDown'){ e.preventDefault(); drag(player.y + PAD_H/2 + 18); }
+    }
+
+    return { reset: reset, update: update, draw: draw, input: input, onKey: onKey, drag: drag, canvas: canvas };
+  })();
+
+  /* ---------------- SHARED MODAL / LOOP LOGIC ---------------- */
+  var games = { flappy: Flappy, tetris: Tetris, pong: Pong };
+
+  function tick(){
+    if(currentGame){
+      games[currentGame].update();
+      games[currentGame].draw();
+    }
+    loop = requestAnimationFrame(tick);
+  }
+
+  function showSelect(){
+    currentGame = null;
+    selectScreen.style.display = 'flex';
+    stage.style.display = 'none';
+    backBtn.style.display = 'none';
+    tetrisControls.style.display = 'none';
+    titleEl.innerHTML = 'Turn8 <span>Arcade</span>';
+    hint.textContent = '';
+  }
+
+  function playGame(name){
+    currentGame = name;
+    selectScreen.style.display = 'none';
+    stage.style.display = 'flex';
+    backBtn.style.display = 'inline-flex';
+    flappyCanvas.style.display = name === 'flappy' ? 'block' : 'none';
+    tetrisCanvas.style.display = name === 'tetris' ? 'block' : 'none';
+    pongCanvas.style.display = name === 'pong' ? 'block' : 'none';
+    tetrisControls.style.display = name === 'tetris' ? 'flex' : 'none';
+    titleEl.innerHTML = name === 'flappy' ? 'Flappy <span>T8</span>' : name === 'tetris' ? 'Tetris <span>T8</span>' : 'Pong <span>T8</span>';
+    games[name].reset();
+  }
+
+  function openModal(){
+    overlay.classList.add('open');
+    showSelect();
+    document.addEventListener('keydown', onKeydown);
+    if(!loop) tick();
+  }
+
+  function closeModal(){
+    overlay.classList.remove('open');
+    document.removeEventListener('keydown', onKeydown);
+    if(loop){ cancelAnimationFrame(loop); loop = null; }
+  }
+
+  function onKeydown(e){
+    if(e.code === 'Escape'){ closeModal(); return; }
+    if(!currentGame) return;
+    games[currentGame].onKey(e);
+  }
+
+  openBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  backBtn.addEventListener('click', showSelect);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) closeModal(); });
+
+  selectScreen.querySelectorAll('.game-pick').forEach(function(btn){
+    btn.addEventListener('click', function(){ playGame(btn.getAttribute('data-game')); });
+  });
+
+  flappyCanvas.addEventListener('mousedown', function(){ if(currentGame==='flappy') Flappy.input(); });
+  flappyCanvas.addEventListener('touchstart', function(e){ e.preventDefault(); if(currentGame==='flappy') Flappy.input(); }, { passive:false });
+
+  tetrisCanvas.addEventListener('mousedown', function(){ if(currentGame==='tetris') Tetris.input('rotate'); });
+
+  tetrisControls.querySelectorAll('button').forEach(function(btn){
+    var action = btn.getAttribute('data-action');
+    btn.addEventListener('click', function(){ if(currentGame==='tetris') Tetris.input(action); });
+    btn.addEventListener('touchstart', function(e){ e.preventDefault(); if(currentGame==='tetris') Tetris.input(action); }, { passive:false });
+  });
+
+  function pongY(clientY){
+    var rect = pongCanvas.getBoundingClientRect();
+    var scale = pongCanvas.height / rect.height;
+    return (clientY - rect.top) * scale;
+  }
+  pongCanvas.addEventListener('mousedown', function(e){
+    if(currentGame!=='pong') return;
+    Pong.input();
+    Pong.drag(pongY(e.clientY));
+  });
+  pongCanvas.addEventListener('mousemove', function(e){
+    if(currentGame==='pong') Pong.drag(pongY(e.clientY));
+  });
+  pongCanvas.addEventListener('touchstart', function(e){
+    if(currentGame!=='pong') return;
+    e.preventDefault();
+    Pong.input();
+    Pong.drag(pongY(e.touches[0].clientY));
+  }, { passive:false });
+  pongCanvas.addEventListener('touchmove', function(e){
+    if(currentGame!=='pong') return;
+    e.preventDefault();
+    Pong.drag(pongY(e.touches[0].clientY));
+  }, { passive:false });
+})();
+</script>
+
+</body>
+</html>
