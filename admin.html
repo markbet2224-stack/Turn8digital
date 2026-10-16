@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — Turn8digital</title>
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .adm-bar{background:var(--teal-900); border-bottom:1px solid var(--line);}
+  .adm-bar .wrap{display:flex; align-items:center; justify-content:space-between; height:68px;}
+  .adm-bar .logo small{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-300); margin-left:10px;}
+  .adm-link{color:var(--gold-300); font-size:13px; background:none; border:none; cursor:pointer; font-family:inherit; padding:0; margin-left:18px;}
+  .adm-link:hover{color:var(--gold-500);}
+  main.adm{padding:48px 0 90px; min-height:80vh;}
+  .adm h1{font-size:clamp(26px, 4vw, 36px); margin-bottom:8px;}
+  .adm .lead{font-size:15px; color:var(--ink-600); margin-bottom:28px; max-width:60ch; line-height:1.6;}
+  .panel{background:var(--cream-50); border:1px solid rgba(22,33,31,0.09); border-radius:20px; padding:28px; margin-bottom:28px;}
+  .panel h2{font-size:21px; margin-bottom:16px;}
+  .login{max-width:420px; margin:40px auto 0;}
+  .adm label{display:block; font-size:13px; font-weight:600; margin-bottom:6px;}
+  .adm input[type=password], .adm input[type=text], .adm select{
+    font:inherit; font-size:15px; padding:11px 13px; border-radius:12px; width:100%;
+    border:1px solid rgba(22,33,31,0.2); background:#fff; color:var(--ink-900);
+  }
+  .adm input:focus, .adm select:focus{outline:2px solid var(--gold-500); outline-offset:1px; border-color:transparent;}
+  .row{display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;}
+  .row > div{flex:1; min-width:200px;}
+  .adm button.btn-primary{border:none; cursor:pointer; font-family:inherit;}
+  .adm button.btn-primary[disabled]{opacity:.55; cursor:not-allowed; transform:none;}
+  .msg{margin-top:14px; font-size:14px; line-height:1.5; padding:11px 14px; border-radius:12px; display:none;}
+  .msg.ok{display:block; background:#E3F1E7; color:#1B5E3A;}
+  .msg.err{display:block; background:#FBE6E3; color:#8A2A1E;}
+  .drop{
+    border:2px dashed rgba(22,33,31,0.25); border-radius:16px; padding:26px; text-align:center;
+    cursor:pointer; color:var(--ink-600); font-size:15px; margin-bottom:18px; transition:border-color .2s ease, background .2s ease;
+  }
+  .drop:hover, .drop.over{border-color:var(--gold-500); background:rgba(201,161,90,0.08);}
+  .drop strong{color:var(--ink-900);}
+  .queue{display:grid; gap:14px; margin-bottom:18px;}
+  .q-item{display:grid; grid-template-columns:96px 1fr auto; gap:14px; align-items:start; background:#fff; border:1px solid rgba(22,33,31,0.1); border-radius:14px; padding:12px;}
+  .q-item img{width:96px; height:76px; object-fit:cover; border-radius:10px; display:block; background:#E9E3D6;}
+  .q-fields{display:grid; gap:8px;}
+  .q-fields input{padding:8px 11px; font-size:14px;}
+  .q-state{font-size:12px; font-family:'IBM Plex Mono', monospace; color:var(--ink-600); min-width:74px; text-align:right;}
+  .q-state.done{color:#1B5E3A;} .q-state.fail{color:#8A2A1E;}
+  .q-remove{background:none; border:none; cursor:pointer; color:var(--ink-600); font-size:20px; line-height:1; padding:0 4px;}
+  .lib-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:16px;}
+  .lib-item{background:#fff; border:1px solid rgba(22,33,31,0.1); border-radius:14px; overflow:hidden;}
+  .lib-item img{width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:#E9E3D6;}
+  .lib-meta{padding:10px 12px 12px; font-size:13px;}
+  .lib-meta b{display:block; font-size:14px; margin-bottom:2px; overflow-wrap:anywhere;}
+  .lib-meta span{color:var(--ink-600); font-size:12px;}
+  .lib-del{margin-top:8px; font:inherit; font-size:12px; color:#8A2A1E; background:none; border:1px solid rgba(138,42,30,0.35); border-radius:999px; padding:5px 12px; cursor:pointer;}
+  .lib-del:hover{background:#FBE6E3;}
+  .empty{color:var(--ink-600); font-size:14px;}
+  [hidden]{display:none !important;}
+  @media (max-width:560px){ .q-item{grid-template-columns:72px 1fr;} .q-item img{width:72px; height:60px;} .q-state{grid-column:2; text-align:left;} .adm-bar .logo small{display:none;} }
+</style>
+</head>
+<body>
+
+<header class="adm-bar">
+  <div class="wrap">
+    <a class="logo" href="index.html">Turn8<span>digital</span><small>Admin</small></a>
+    <div>
+      <a class="adm-link" href="work.html" target="_blank" rel="noopener">View Work page ↗</a>
+      <button class="adm-link" id="logoutBtn" type="button" hidden>Log out</button>
+    </div>
+  </div>
+</header>
+
+<main class="adm"><div class="wrap">
+
+  <!-- LOGIN -->
+  <section class="panel login" id="loginView">
+    <h2>Admin sign-in</h2>
+    <form id="loginForm">
+      <label for="pw">Password</label>
+      <input id="pw" type="password" autocomplete="current-password" required>
+      <div style="height:16px"></div>
+      <button class="btn-primary" type="submit" id="loginBtn">Sign in</button>
+      <div class="msg" id="loginMsg" role="status"></div>
+    </form>
+  </section>
+
+  <!-- DASHBOARD -->
+  <div id="appView" hidden>
+    <h1>Project photos</h1>
+    <p class="lead">Add photos here and they appear on your Work page and home page straight away. No GitHub upload needed. Photos are resized automatically, so you can pick them straight from your phone.</p>
+
+    <section class="panel">
+      <h2>Add photos</h2>
+      <div class="row">
+        <div>
+          <label for="cat">Category</label>
+          <select id="cat">
+            <option value="website">Websites</option>
+            <option value="event">Event coverage</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="drop" id="drop"><strong>Tap to choose photos</strong><br>or drag them here (JPG, PNG or WebP)</div>
+      <input type="file" id="file" accept="image/jpeg,image/png,image/webp,image/*" multiple hidden>
+      <div class="queue" id="queue"></div>
+      <button class="btn-primary" type="button" id="uploadBtn" disabled>Upload photos</button>
+      <div class="msg" id="uploadMsg" role="status"></div>
+    </section>
+
+    <section class="panel">
+      <h2>On your site now <span id="count" style="font-weight:400; color:var(--ink-600); font-size:15px;"></span></h2>
+      <div class="lib-grid" id="lib"></div>
+      <p class="empty" id="libEmpty" hidden>Nothing uploaded yet. Your first photos will show up here.</p>
+      <div class="msg" id="libMsg" role="status"></div>
+    </section>
+  </div>
+
+</div></main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var LABELS = { website: 'Websites', event: 'Event coverage', other: 'Other' };
+  var password = '';
+  try { password = sessionStorage.getItem('t8admin') || ''; } catch (e) {}
+  var queue = []; // { file, el, state }
+
+  function msg(el, kind, text) { el.className = 'msg ' + kind; el.textContent = text; }
+  function clearMsg(el) { el.className = 'msg'; el.textContent = ''; }
+  function api(path, opts) {
+    opts = opts || {};
+    opts.headers = Object.assign({ Authorization: 'Bearer ' + password }, opts.headers || {});
+    opts.cache = 'no-store';
+    return fetch(path, opts);
+  }
+
+  // ---------- sign in ----------
+  function showApp() {
+    $('loginView').hidden = true; $('appView').hidden = false; $('logoutBtn').hidden = false;
+    loadLibrary();
+  }
+  function showLogin() {
+    $('loginView').hidden = false; $('appView').hidden = true; $('logoutBtn').hidden = true;
+  }
+  function checkPassword(pw, quiet) {
+    password = pw;
+    return api('/api/auth-check', { method: 'POST' }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) {
+        if (r.ok) {
+          try { sessionStorage.setItem('t8admin', pw); } catch (e) {}
+          showApp(); return true;
+        }
+        password = '';
+        try { sessionStorage.removeItem('t8admin'); } catch (e) {}
+        if (!quiet) msg($('loginMsg'), 'err', d.error || 'Could not sign in.');
+        showLogin(); return false;
+      });
+    }).catch(function () {
+      password = '';
+      if (!quiet) msg($('loginMsg'), 'err', 'Could not reach the site. Check your connection, and make sure you are on the live Netlify address.');
+      showLogin(); return false;
+    });
+  }
+  $('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearMsg($('loginMsg'));
+    $('loginBtn').disabled = true;
+    checkPassword($('pw').value, false).then(function () { $('loginBtn').disabled = false; });
+  });
+  $('logoutBtn').addEventListener('click', function () {
+    password = ''; try { sessionStorage.removeItem('t8admin'); } catch (e) {}
+    $('pw').value = ''; showLogin();
+  });
+  if (password) checkPassword(password, true);
+
+  // ---------- picking photos ----------
+  var drop = $('drop'), fileInput = $('file');
+  drop.addEventListener('click', function () { fileInput.click(); });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('over'); });
+  drop.addEventListener('drop', function (e) { e.preventDefault(); drop.classList.remove('over'); addFiles(e.dataTransfer.files); });
+  fileInput.addEventListener('change', function () { addFiles(fileInput.files); fileInput.value = ''; });
+
+  function addFiles(list) {
+    Array.prototype.forEach.call(list, function (file) {
+      if (!/^image\//.test(file.type)) return;
+      var item = { file: file, state: 'ready' };
+      var el = document.createElement('div'); el.className = 'q-item';
+      var img = document.createElement('img'); img.alt = '';
+      item.url = URL.createObjectURL(file); img.src = item.url;
+      var fields = document.createElement('div'); fields.className = 'q-fields';
+      item.title = document.createElement('input'); item.title.type = 'text'; item.title.maxLength = 80;
+      item.title.placeholder = 'Title (optional), e.g. Noor Cafe website';
+      item.caption = document.createElement('input'); item.caption.type = 'text'; item.caption.maxLength = 240;
+      item.caption.placeholder = 'Short caption (optional)';
+      fields.appendChild(item.title); fields.appendChild(item.caption);
+      var side = document.createElement('div');
+      item.status = document.createElement('div'); item.status.className = 'q-state'; item.status.textContent = 'Ready';
+      item.remove = document.createElement('button'); item.remove.type = 'button'; item.remove.className = 'q-remove';
+      item.remove.setAttribute('aria-label', 'Remove'); item.remove.innerHTML = '&times;';
+      item.remove.addEventListener('click', function () {
+        URL.revokeObjectURL(item.url);
+        queue = queue.filter(function (q) { return q !== item; });
+        el.remove(); refreshButton();
+      });
+      side.appendChild(item.status); side.appendChild(item.remove);
+      el.appendChild(img); el.appendChild(fields); el.appendChild(side);
+      item.el = el; queue.push(item); $('queue').appendChild(el);
+    });
+    refreshButton();
+  }
+  function refreshButton() {
+    var n = queue.filter(function (q) { return q.state !== 'done'; }).length;
+    $('uploadBtn').disabled = n === 0;
+    $('uploadBtn').textContent = n > 1 ? 'Upload ' + n + ' photos' : 'Upload photo';
+  }
+
+  // ---------- shrink a photo before uploading ----------
+  function loadBitmap(file) {
+    if (window.createImageBitmap) {
+      return createImageBitmap(file, { imageOrientation: 'from-image' }).catch(function () { return viaImage(file); });
+    }
+    return viaImage(file);
+  }
+  function viaImage(file) {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function () { URL.revokeObjectURL(url); resolve(img); };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('unreadable')); };
+      img.src = url;
+    });
+  }
+  function shrink(file) {
+    return loadBitmap(file).then(function (bmp) {
+      var w0 = bmp.width || bmp.naturalWidth, h0 = bmp.height || bmp.naturalHeight;
+      var scale = Math.min(1, 1600 / Math.max(w0, h0));
+      var w = Math.round(w0 * scale), h = Math.round(h0 * scale);
+      var c = document.createElement('canvas'); c.width = w; c.height = h;
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(bmp, 0, 0, w, h);
+      return new Promise(function (resolve, reject) {
+        c.toBlob(function (b) { b ? resolve(b) : reject(new Error('encode')); }, 'image/jpeg', 0.85);
+      });
+    });
+  }
+
+  // ---------- upload ----------
+  function uploadOne(item, category) {
+    item.status.className = 'q-state'; item.status.textContent = 'Resizing…';
+    return shrink(item.file).then(function (blob) {
+      item.status.textContent = 'Uploading…';
+      var fd = new FormData();
+      fd.append('file', blob, 'photo.jpg');
+      fd.append('category', category);
+      fd.append('title', item.title.value);
+      fd.append('caption', item.caption.value);
+      return api('/api/upload', { method: 'POST', body: fd });
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) {
+        if (!r.ok) throw new Error(d.error || ('Error ' + r.status));
+        item.state = 'done'; item.status.className = 'q-state done'; item.status.textContent = 'Done ✓';
+        item.remove.hidden = true; item.title.disabled = true; item.caption.disabled = true;
+        return true;
+      });
+    }).catch(function (err) {
+      item.state = 'ready'; item.status.className = 'q-state fail';
+      item.status.textContent = (err && err.message === 'unreadable') ? 'Cannot read' : 'Failed';
+      item.status.title = err && err.message;
+      return false;
+    });
+  }
+  $('uploadBtn').addEventListener('click', function () {
+    // newest photo shows first on the site, so send the batch last-to-first to keep the order you picked
+    var todo = queue.filter(function (q) { return q.state !== 'done'; }).reverse();
+    if (!todo.length) return;
+    var category = $('cat').value, ok = 0, bad = 0;
+    $('uploadBtn').disabled = true; clearMsg($('uploadMsg'));
+    todo.reduce(function (p, item) {
+      return p.then(function () { return uploadOne(item, category); }).then(function (good) { good ? ok++ : bad++; });
+    }, Promise.resolve()).then(function () {
+      if (bad === 0) {
+        msg($('uploadMsg'), 'ok', ok + (ok === 1 ? ' photo is' : ' photos are') + ' now live on your site.');
+        // clear finished rows after a moment
+        setTimeout(function () {
+          queue = queue.filter(function (q) { if (q.state === 'done') { URL.revokeObjectURL(q.url); q.el.remove(); return false; } return true; });
+          refreshButton();
+        }, 1500);
+      } else {
+        msg($('uploadMsg'), 'err', ok + ' uploaded, ' + bad + ' failed. Check your connection and press Upload again to retry the failed ones. If a photo says "Cannot read", try a JPG or PNG version of it.');
+      }
+      refreshButton(); loadLibrary();
+    });
+  });
+
+  // ---------- library ----------
+  function loadLibrary() {
+    api('/api/gallery').then(function (r) { if (!r.ok) throw new Error(); return r.json(); }).then(function (d) {
+      var items = d.items || [], lib = $('lib');
+      lib.innerHTML = '';
+      $('libEmpty').hidden = items.length > 0;
+      $('count').textContent = items.length ? '(' + items.length + ')' : '';
+      items.forEach(function (it) {
+        var card = document.createElement('div'); card.className = 'lib-item';
+        var img = document.createElement('img'); img.src = '/api/image/' + it.id; img.loading = 'lazy'; img.alt = it.title || 'Project photo';
+        var meta = document.createElement('div'); meta.className = 'lib-meta';
+        var b = document.createElement('b'); b.textContent = it.title || 'Untitled';
+        var sp = document.createElement('span'); sp.textContent = LABELS[it.category] || 'Other';
+        var del = document.createElement('button'); del.type = 'button'; del.className = 'lib-del'; del.textContent = 'Delete';
+        del.addEventListener('click', function () {
+          if (!confirm('Remove this photo from your site? This cannot be undone.')) return;
+          del.disabled = true; clearMsg($('libMsg'));
+          api('/api/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: it.id }) })
+            .then(function (r) { if (!r.ok) throw new Error(); loadLibrary(); })
+            .catch(function () { del.disabled = false; msg($('libMsg'), 'err', 'Could not delete that photo. Please try again.'); });
+        });
+        meta.appendChild(b); meta.appendChild(sp); meta.appendChild(document.createElement('br')); meta.appendChild(del);
+        card.appendChild(img); card.appendChild(meta); lib.appendChild(card);
+      });
+    }).catch(function () { msg($('libMsg'), 'err', 'Could not load your photos right now.'); });
+  }
+})();
+</script>
+</body>
+</html>
