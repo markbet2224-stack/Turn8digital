@@ -96,3 +96,91 @@
     })
     .catch(function () { /* not on Netlify, or offline: the section simply stays hidden */ });
 })();
+
+
+/* ===== Homepage animation (Signature) ===== */
+(function () {
+  'use strict';
+  if (!document.body.classList.contains('home')) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 1) Headline: split into words so they can rise in one by one
+  var h1 = document.querySelector('.hero-copy h1');
+  if (h1 && !reduce) {
+    var i = 0;
+    (function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(function (part) {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
+            var s = document.createElement('span');
+            s.className = 'w'; s.style.setProperty('--i', i++); s.textContent = part;
+            frag.appendChild(s);
+          });
+          node.replaceChild(frag, n);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') { walk(n); }
+      });
+    })(h1);
+    h1.classList.add('is-split');
+  }
+
+  // 2) Rotating services line
+  var rot = document.querySelector('.rot-words');
+  if (rot) {
+    var words = (rot.getAttribute('data-words') || '').split('|').filter(Boolean);
+    if (reduce) {
+      rot.textContent = words.join(' · ');
+    } else if (words.length > 1) {
+      var idx = 0;
+      setTimeout(function () {
+        setInterval(function () {
+          if (document.hidden) return;
+          rot.classList.add('out');
+          setTimeout(function () {
+            idx = (idx + 1) % words.length;
+            rot.textContent = words[idx];
+            rot.classList.remove('out'); rot.classList.add('pre');
+            void rot.offsetWidth;
+            rot.classList.remove('pre');
+          }, 360);
+        }, 2800);
+      }, 2800);
+    }
+  }
+
+  // 3) Pause the turning 8 while the hero is off-screen
+  var eight = document.querySelector('.eight'), hero = document.querySelector('.hero');
+  if (eight && hero && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      eight.classList.toggle('paused', !entries[0].isIntersecting);
+    }).observe(hero);
+  }
+
+  // 4) Scroll reveals
+  if (reduce || !('IntersectionObserver' in window)) return;
+  var groups = [
+    '.services .eyebrow', '.services h2', '.services .card', '.services .more-link',
+    '.fresh .wrap > *', '.trust .eyebrow', '.trust-item', '.contact .wrap > *'
+  ];
+  var targets = [];
+  groups.forEach(function (sel) {
+    Array.prototype.forEach.call(document.querySelectorAll(sel), function (el, k) {
+      el.classList.add('reveal');
+      el.style.setProperty('--d', (sel === '.services .card' || sel === '.trust-item' ? k * 90 : 0) + 'ms');
+      targets.push(el);
+    });
+  });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var el = e.target; io.unobserve(el);
+      el.classList.add('in');
+      // hand control back to the element's normal styles (keeps card hover transitions)
+      var wait = 900 + (parseInt(el.style.getPropertyValue('--d'), 10) || 0);
+      setTimeout(function () { el.classList.remove('reveal', 'in'); el.style.removeProperty('--d'); }, wait);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  targets.forEach(function (el) { io.observe(el); });
+})();
