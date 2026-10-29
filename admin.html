@@ -16,18 +16,19 @@
   .adm-bar .logo small{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-300); margin-left:10px;}
   .adm-link{color:var(--gold-300); font-size:13px; background:none; border:none; cursor:pointer; font-family:inherit; padding:0; margin-left:18px;}
   .adm-link:hover{color:var(--gold-500);}
-  main.adm{padding:48px 0 90px; min-height:80vh;}
+  main.adm{padding:40px 0 90px; min-height:80vh;}
   .adm h1{font-size:clamp(26px, 4vw, 36px); margin-bottom:8px;}
-  .adm .lead{font-size:15px; color:var(--ink-600); margin-bottom:28px; max-width:60ch; line-height:1.6;}
+  .adm .lead{font-size:15px; color:var(--ink-600); margin-bottom:24px; max-width:62ch; line-height:1.6;}
   .panel{background:var(--cream-50); border:1px solid rgba(22,33,31,0.09); border-radius:20px; padding:28px; margin-bottom:28px;}
   .panel h2{font-size:21px; margin-bottom:16px;}
   .login{max-width:420px; margin:40px auto 0;}
   .adm label{display:block; font-size:13px; font-weight:600; margin-bottom:6px;}
-  .adm input[type=password], .adm input[type=text], .adm select{
+  .adm input[type=password], .adm input[type=text], .adm select, .adm textarea{
     font:inherit; font-size:15px; padding:11px 13px; border-radius:12px; width:100%;
     border:1px solid rgba(22,33,31,0.2); background:#fff; color:var(--ink-900);
   }
-  .adm input:focus, .adm select:focus{outline:2px solid var(--gold-500); outline-offset:1px; border-color:transparent;}
+  .adm textarea{min-height:76px; resize:vertical;}
+  .adm input:focus, .adm select:focus, .adm textarea:focus{outline:2px solid var(--gold-500); outline-offset:1px; border-color:transparent;}
   .row{display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;}
   .row > div{flex:1; min-width:200px;}
   .adm button.btn-primary{border:none; cursor:pointer; font-family:inherit;}
@@ -35,10 +36,53 @@
   .msg{margin-top:14px; font-size:14px; line-height:1.5; padding:11px 14px; border-radius:12px; display:none;}
   .msg.ok{display:block; background:#E3F1E7; color:#1B5E3A;}
   .msg.err{display:block; background:#FBE6E3; color:#8A2A1E;}
-  .drop{
-    border:2px dashed rgba(22,33,31,0.25); border-radius:16px; padding:26px; text-align:center;
-    cursor:pointer; color:var(--ink-600); font-size:15px; margin-bottom:18px; transition:border-color .2s ease, background .2s ease;
-  }
+  .msg.warn{display:block; background:#FFF4D6; color:#6B4E0A;}
+  [hidden]{display:none !important;}
+
+  /* tabs */
+  .tabs{display:flex; gap:8px; margin-bottom:26px; border-bottom:1px solid rgba(22,33,31,0.12);}
+  .tab{background:none; border:none; font:inherit; font-size:15px; font-weight:600; padding:12px 18px; cursor:pointer; color:var(--ink-600); border-bottom:3px solid transparent; margin-bottom:-1px; display:flex; gap:8px; align-items:center;}
+  .tab.on{color:var(--ink-900); border-bottom-color:var(--gold-500);}
+  .badge{background:var(--gold-500); color:var(--teal-900); font-size:11px; font-weight:700; border-radius:999px; padding:2px 8px; font-family:'IBM Plex Mono', monospace;}
+
+  /* bookings */
+  .toolbar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:18px;}
+  .chip{font:inherit; font-size:13px; padding:7px 14px; border-radius:999px; cursor:pointer; border:1px solid rgba(22,33,31,0.18); background:transparent; color:var(--ink-900);}
+  .chip.on{background:var(--teal-900); border-color:var(--teal-900); color:var(--cream-100);}
+  .toolbar .sp{flex:1;}
+  .toolbar select{width:auto; padding:8px 12px; font-size:13px;}
+  .tbtn{font:inherit; font-size:13px; padding:8px 14px; border-radius:999px; cursor:pointer; border:1px solid rgba(22,33,31,0.25); background:#fff; color:var(--ink-900);}
+  .tbtn:hover{border-color:var(--gold-500);}
+  .bk-list{display:grid; gap:12px;}
+  .bk-item{background:#fff; border:1px solid rgba(22,33,31,0.1); border-radius:16px; overflow:hidden;}
+  .bk-item.new{border-color:var(--gold-500); box-shadow:inset 4px 0 0 var(--gold-500);}
+  .bk-head{display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center; padding:14px 18px; cursor:pointer; width:100%; text-align:left; background:none; border:none; font:inherit; color:inherit;}
+  .bk-head:hover{background:rgba(201,161,90,0.07);}
+  .bk-ref{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-600);}
+  .bk-main b{display:block; font-size:15.5px;}
+  .bk-main span{font-size:13px; color:var(--ink-600);}
+  .pill{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; padding:4px 10px; border-radius:999px; font-family:'IBM Plex Mono', monospace;}
+  .pill.new{background:var(--gold-500); color:var(--teal-900);}
+  .pill.contacted{background:#DCE9F7; color:#1F4E79;}
+  .pill.confirmed{background:#DDF0E1; color:#1B5E3A;}
+  .pill.done{background:#E7E7E7; color:#444;}
+  .pill.declined{background:#F6DEDA; color:#8A2A1E;}
+  .bk-body{padding:4px 18px 18px; border-top:1px solid rgba(22,33,31,0.08);}
+  .bk-actions{display:flex; gap:10px; flex-wrap:wrap; margin:14px 0;}
+  .bk-actions a{font-size:13px; font-weight:600; text-decoration:none; padding:8px 14px; border-radius:999px; background:var(--teal-900); color:var(--cream-100);}
+  .bk-actions a.wa{background:#25D366; color:#073b1b;}
+  .kv{display:grid; grid-template-columns:200px 1fr; gap:6px 14px; font-size:14px; margin:6px 0 4px;}
+  .kv dt{color:var(--ink-600);}
+  .kv dd{margin:0; white-space:pre-wrap; overflow-wrap:anywhere;}
+  .bk-edit{display:grid; grid-template-columns:200px 1fr auto; gap:12px; align-items:start; margin-top:16px; padding-top:16px; border-top:1px dashed rgba(22,33,31,0.15);}
+  .mail-state{font-size:12.5px; margin-top:12px; color:var(--ink-600);}
+  .mail-state.bad{color:#8A2A1E;}
+  .danger{font:inherit; font-size:12.5px; color:#8A2A1E; background:none; border:1px solid rgba(138,42,30,0.35); border-radius:999px; padding:6px 14px; cursor:pointer;}
+  .danger:hover{background:#FBE6E3;}
+  .empty{color:var(--ink-600); font-size:14px; padding:6px 2px;}
+
+  /* photos */
+  .drop{border:2px dashed rgba(22,33,31,0.25); border-radius:16px; padding:26px; text-align:center; cursor:pointer; color:var(--ink-600); font-size:15px; margin-bottom:18px; transition:border-color .2s ease, background .2s ease;}
   .drop:hover, .drop.over{border-color:var(--gold-500); background:rgba(201,161,90,0.08);}
   .drop strong{color:var(--ink-900);}
   .queue{display:grid; gap:14px; margin-bottom:18px;}
@@ -57,9 +101,13 @@
   .lib-meta span{color:var(--ink-600); font-size:12px;}
   .lib-del{margin-top:8px; font:inherit; font-size:12px; color:#8A2A1E; background:none; border:1px solid rgba(138,42,30,0.35); border-radius:999px; padding:5px 12px; cursor:pointer;}
   .lib-del:hover{background:#FBE6E3;}
-  .empty{color:var(--ink-600); font-size:14px;}
-  [hidden]{display:none !important;}
-  @media (max-width:560px){ .q-item{grid-template-columns:72px 1fr;} .q-item img{width:72px; height:60px;} .q-state{grid-column:2; text-align:left;} .adm-bar .logo small{display:none;} }
+  @media (max-width:700px){
+    .bk-head{grid-template-columns:1fr auto;} .bk-ref{grid-column:1 / -1;}
+    .kv{grid-template-columns:1fr; gap:0;} .kv dd{margin-bottom:8px;}
+    .bk-edit{grid-template-columns:1fr;}
+    .q-item{grid-template-columns:72px 1fr;} .q-item img{width:72px; height:60px;} .q-state{grid-column:2; text-align:left;}
+    .adm-bar .logo small{display:none;}
+  }
 </style>
 </head>
 <body>
@@ -68,7 +116,7 @@
   <div class="wrap">
     <a class="logo" href="index.html">Turn8<span>digital</span><small>Admin</small></a>
     <div>
-      <a class="adm-link" href="work.html" target="_blank" rel="noopener">View Work page ↗</a>
+      <a class="adm-link" href="index.html" target="_blank" rel="noopener">View site ↗</a>
       <button class="adm-link" id="logoutBtn" type="button" hidden>Log out</button>
     </div>
   </div>
@@ -90,33 +138,66 @@
 
   <!-- DASHBOARD -->
   <div id="appView" hidden>
-    <h1>Project photos</h1>
-    <p class="lead">Add photos here and they appear on your Work page and home page straight away. No GitHub upload needed. Photos are resized automatically, so you can pick them straight from your phone.</p>
+    <div class="tabs" role="tablist">
+      <button class="tab on" id="tabBookings" role="tab" type="button">Bookings <span class="badge" id="newBadge" hidden>0</span></button>
+      <button class="tab" id="tabPhotos" role="tab" type="button">Photos</button>
+    </div>
 
-    <section class="panel">
-      <h2>Add photos</h2>
-      <div class="row">
-        <div>
-          <label for="cat">Category</label>
-          <select id="cat">
-            <option value="website">Websites</option>
-            <option value="event">Event coverage</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
+    <!-- BOOKINGS -->
+    <section id="bookingsView">
+      <h1>Booking requests</h1>
+      <p class="lead">Requests from the Book a service page appear here. Tap one to see every answer, contact the client, set its status and keep notes.</p>
+      <div class="msg warn" id="mailWarn"></div>
+      <div class="toolbar">
+        <div id="statusChips"></div>
+        <span class="sp"></span>
+        <select id="svcFilter" aria-label="Filter by service">
+          <option value="">All services</option>
+          <option value="web">Web development</option>
+          <option value="refresh">Refresh &amp; fixes</option>
+          <option value="care">Ongoing care</option>
+          <option value="events">Event coverage</option>
+          <option value="design">Graphic design</option>
+        </select>
+        <button class="tbtn" id="csvBtn" type="button">Export CSV</button>
+        <button class="tbtn" id="testMailBtn" type="button">Send test email</button>
       </div>
-      <div class="drop" id="drop"><strong>Tap to choose photos</strong><br>or drag them here (JPG, PNG or WebP)</div>
-      <input type="file" id="file" accept="image/jpeg,image/png,image/webp,image/*" multiple hidden>
-      <div class="queue" id="queue"></div>
-      <button class="btn-primary" type="button" id="uploadBtn" disabled>Upload photos</button>
-      <div class="msg" id="uploadMsg" role="status"></div>
+      <div class="msg" id="bkMsg" role="status"></div>
+      <div class="bk-list" id="bkList"></div>
+      <p class="empty" id="bkEmpty" hidden>No requests here yet. When someone books a service, it will show up here and you'll get an email.</p>
     </section>
 
-    <section class="panel">
-      <h2>On your site now <span id="count" style="font-weight:400; color:var(--ink-600); font-size:15px;"></span></h2>
-      <div class="lib-grid" id="lib"></div>
-      <p class="empty" id="libEmpty" hidden>Nothing uploaded yet. Your first photos will show up here.</p>
-      <div class="msg" id="libMsg" role="status"></div>
+    <!-- PHOTOS -->
+    <section id="photosView" hidden>
+      <h1>Project photos</h1>
+      <p class="lead">Add photos here and they appear on your Work page and home page straight away. No GitHub upload needed. Photos are resized automatically, so you can pick them straight from your phone.</p>
+
+      <div class="panel">
+        <h2>Add photos</h2>
+        <div class="row">
+          <div>
+            <label for="cat">Category</label>
+            <select id="cat">
+              <option value="website">Websites</option>
+              <option value="event">Event coverage</option>
+              <option value="design">Graphic design</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="drop" id="drop"><strong>Tap to choose photos</strong><br>or drag them here (JPG, PNG or WebP)</div>
+        <input type="file" id="file" accept="image/jpeg,image/png,image/webp,image/*" multiple hidden>
+        <div class="queue" id="queue"></div>
+        <button class="btn-primary" type="button" id="uploadBtn" disabled>Upload photos</button>
+        <div class="msg" id="uploadMsg" role="status"></div>
+      </div>
+
+      <div class="panel">
+        <h2>On your site now <span id="count" style="font-weight:400; color:var(--ink-600); font-size:15px;"></span></h2>
+        <div class="lib-grid" id="lib"></div>
+        <p class="empty" id="libEmpty" hidden>Nothing uploaded yet. Your first photos will show up here.</p>
+        <div class="msg" id="libMsg" role="status"></div>
+      </div>
     </section>
   </div>
 
@@ -126,10 +207,11 @@
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
-  var LABELS = { website: 'Websites', event: 'Event coverage', other: 'Other' };
+  var CAT = { website: 'Websites', event: 'Event coverage', design: 'Graphic design', other: 'Other' };
+  var STATUS = { new: 'New', contacted: 'Contacted', confirmed: 'Confirmed', done: 'Done', declined: 'Declined' };
   var password = '';
   try { password = sessionStorage.getItem('t8admin') || ''; } catch (e) {}
-  var queue = []; // { file, el, state }
+  var queue = [], bookings = [], filterStatus = 'all', filterSvc = '', openIds = {}, poll = null, baseTitle = document.title;
 
   function msg(el, kind, text) { el.className = 'msg ' + kind; el.textContent = text; }
   function clearMsg(el) { el.className = 'msg'; el.textContent = ''; }
@@ -139,25 +221,22 @@
     opts.cache = 'no-store';
     return fetch(path, opts);
   }
+  function jpost(path, data) { return api(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 
-  // ---------- sign in ----------
+  /* ---------- sign in ---------- */
   function showApp() {
     $('loginView').hidden = true; $('appView').hidden = false; $('logoutBtn').hidden = false;
-    loadLibrary();
+    loadBookings(); loadLibrary();
+    clearInterval(poll); poll = setInterval(function () { if (!document.hidden) loadBookings(true); }, 60000);
   }
-  function showLogin() {
-    $('loginView').hidden = false; $('appView').hidden = true; $('logoutBtn').hidden = true;
-  }
+  function showLogin() { $('loginView').hidden = false; $('appView').hidden = true; $('logoutBtn').hidden = true; clearInterval(poll); document.title = baseTitle; }
   function checkPassword(pw, quiet) {
     password = pw;
     return api('/api/auth-check', { method: 'POST' }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (d) {
-        if (r.ok) {
-          try { sessionStorage.setItem('t8admin', pw); } catch (e) {}
-          showApp(); return true;
-        }
-        password = '';
-        try { sessionStorage.removeItem('t8admin'); } catch (e) {}
+        if (r.ok) { try { sessionStorage.setItem('t8admin', pw); } catch (e) {} showApp(); return true; }
+        password = ''; try { sessionStorage.removeItem('t8admin'); } catch (e) {}
         if (!quiet) msg($('loginMsg'), 'err', d.error || 'Could not sign in.');
         showLogin(); return false;
       });
@@ -168,9 +247,7 @@
     });
   }
   $('loginForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    clearMsg($('loginMsg'));
-    $('loginBtn').disabled = true;
+    e.preventDefault(); clearMsg($('loginMsg')); $('loginBtn').disabled = true;
     checkPassword($('pw').value, false).then(function () { $('loginBtn').disabled = false; });
   });
   $('logoutBtn').addEventListener('click', function () {
@@ -179,7 +256,137 @@
   });
   if (password) checkPassword(password, true);
 
-  // ---------- picking photos ----------
+  /* ---------- tabs ---------- */
+  function tab(which) {
+    $('tabBookings').classList.toggle('on', which === 'b'); $('tabPhotos').classList.toggle('on', which === 'p');
+    $('bookingsView').hidden = which !== 'b'; $('photosView').hidden = which !== 'p';
+  }
+  $('tabBookings').addEventListener('click', function () { tab('b'); });
+  $('tabPhotos').addEventListener('click', function () { tab('p'); });
+
+  /* ====================== BOOKINGS ====================== */
+  function when(iso) { try { return new Date(iso).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }); } catch (e) { return iso; } }
+  function waNumber(p) {
+    var d = String(p || '').replace(/\D/g, '');
+    if (!d) return '';
+    if (d.indexOf('254') === 0) return d;
+    if (d.charAt(0) === '0') return '254' + d.slice(1);
+    if (d.length === 9) return '254' + d;
+    return d;
+  }
+  function loadBookings(silent) {
+    api('/api/bookings').then(function (r) { if (!r.ok) throw new Error(); return r.json(); }).then(function (d) {
+      bookings = d.bookings || [];
+      var warn = $('mailWarn');
+      if (!d.emailConfigured) msg(warn, 'warn', 'Email alerts are not set up yet. In Netlify add RESEND_API_KEY and NOTIFY_EMAIL under Environment variables, redeploy, then press "Send test email".');
+      else clearMsg(warn);
+      renderChips(); renderBookings(); updateBadge();
+    }).catch(function () { if (!silent) msg($('bkMsg'), 'err', 'Could not load booking requests right now.'); });
+  }
+  function updateBadge() {
+    var n = bookings.filter(function (b) { return b.status === 'new'; }).length;
+    $('newBadge').textContent = n; $('newBadge').hidden = n === 0;
+    document.title = (n ? '(' + n + ') ' : '') + baseTitle;
+  }
+  function renderChips() {
+    var box = $('statusChips'); box.innerHTML = '';
+    var counts = { all: bookings.length };
+    bookings.forEach(function (b) { counts[b.status] = (counts[b.status] || 0) + 1; });
+    ['all'].concat(Object.keys(STATUS)).forEach(function (s) {
+      var b = el('button', 'chip' + (filterStatus === s ? ' on' : ''), (s === 'all' ? 'All' : STATUS[s]) + ' (' + (counts[s] || 0) + ')');
+      b.type = 'button'; b.style.marginRight = '6px';
+      b.addEventListener('click', function () { filterStatus = s; renderChips(); renderBookings(); });
+      box.appendChild(b);
+    });
+  }
+  $('svcFilter').addEventListener('change', function () { filterSvc = this.value; renderBookings(); });
+
+  function renderBookings() {
+    var list = $('bkList'); list.innerHTML = '';
+    var shown = bookings.filter(function (b) { return (filterStatus === 'all' || b.status === filterStatus) && (!filterSvc || b.service === filterSvc); });
+    $('bkEmpty').hidden = shown.length > 0;
+    shown.forEach(function (b) { list.appendChild(bookingCard(b)); });
+  }
+
+  function bookingCard(b) {
+    var item = el('div', 'bk-item' + (b.status === 'new' ? ' new' : ''));
+    var head = el('button', 'bk-head'); head.type = 'button';
+    var budget = (b.answers.filter(function (a) { return a.label === 'Budget'; })[0] || {}).value;
+    var main = el('div', 'bk-main'); main.appendChild(el('b', null, b.name)); main.appendChild(el('span', null, b.serviceLabel + ' · ' + when(b.createdAt) + (budget ? ' · ' + budget : '')));
+    head.appendChild(el('span', 'bk-ref', b.id)); head.appendChild(main); head.appendChild(el('span', 'pill ' + b.status, STATUS[b.status] || b.status));
+    var body = el('div', 'bk-body'); body.hidden = !openIds[b.id];
+    head.addEventListener('click', function () { body.hidden = !body.hidden; openIds[b.id] = !body.hidden; });
+    item.appendChild(head);
+
+    // contact buttons
+    var acts = el('div', 'bk-actions');
+    var wa = waNumber(b.phone);
+    var greet = 'Hi ' + b.name.split(' ')[0] + ', this is Mark from Turn8digital about your ' + b.serviceLabel.toLowerCase() + ' request (' + b.id + ').';
+    if (wa) { var a1 = el('a', 'wa', 'WhatsApp'); a1.href = 'https://wa.me/' + wa + '?text=' + encodeURIComponent(greet); a1.target = '_blank'; a1.rel = 'noopener'; acts.appendChild(a1); }
+    if (b.phone) { var a2 = el('a', null, 'Call'); a2.href = 'tel:' + b.phone.replace(/[^\d+]/g, ''); acts.appendChild(a2); }
+    if (b.email) { var a3 = el('a', null, 'Email'); a3.href = 'mailto:' + b.email + '?subject=' + encodeURIComponent('Your ' + b.serviceLabel + ' request (' + b.id + ')'); acts.appendChild(a3); }
+    body.appendChild(acts);
+
+    // details
+    var dl = el('dl', 'kv');
+    function kv(k, v) { if (!v) return; dl.appendChild(el('dt', null, k)); dl.appendChild(el('dd', null, v)); }
+    kv('Phone / WhatsApp', b.phone); kv('Email', b.email); kv('Prefers', b.method);
+    b.answers.forEach(function (a) { kv(a.label, a.value); });
+    body.appendChild(dl);
+
+    // status + note
+    var edit = el('div', 'bk-edit');
+    var sel = el('select'); Object.keys(STATUS).forEach(function (s) { var o = el('option', null, STATUS[s]); o.value = s; if (s === b.status) o.selected = true; sel.appendChild(o); });
+    sel.setAttribute('aria-label', 'Status');
+    sel.addEventListener('change', function () {
+      jpost('/api/booking-update', { id: b.id, status: sel.value }).then(function (r) { if (!r.ok) throw 0; b.status = sel.value; renderChips(); updateBadge(); head.querySelector('.pill').className = 'pill ' + b.status; head.querySelector('.pill').textContent = STATUS[b.status]; item.classList.toggle('new', b.status === 'new'); })
+        .catch(function () { msg($('bkMsg'), 'err', 'Could not update that status. Please try again.'); sel.value = b.status; });
+    });
+    var note = el('textarea'); note.placeholder = 'Private notes (only you see these)'; note.value = b.note || '';
+    var save = el('button', 'tbtn', 'Save note'); save.type = 'button';
+    save.addEventListener('click', function () {
+      save.disabled = true;
+      jpost('/api/booking-update', { id: b.id, note: note.value }).then(function (r) { if (!r.ok) throw 0; b.note = note.value; save.textContent = 'Saved ✓'; setTimeout(function () { save.textContent = 'Save note'; }, 1500); })
+        .catch(function () { msg($('bkMsg'), 'err', 'Could not save the note.'); }).then(function () { save.disabled = false; });
+    });
+    edit.appendChild(sel); edit.appendChild(note); edit.appendChild(save);
+    body.appendChild(edit);
+
+    var n = b.notified;
+    body.appendChild(el('div', 'mail-state' + (n && !n.sent ? ' bad' : ''), n ? (n.sent ? 'Email alert sent to you ✓' : 'Email alert not sent: ' + (n.error || 'unknown reason')) : 'Email alert status unknown'));
+
+    var del = el('button', 'danger', 'Delete request'); del.type = 'button'; del.style.marginTop = '14px';
+    del.addEventListener('click', function () {
+      if (!confirm('Delete request ' + b.id + ' from ' + b.name + '? This cannot be undone.')) return;
+      jpost('/api/booking-delete', { id: b.id }).then(function (r) { if (!r.ok) throw 0; bookings = bookings.filter(function (x) { return x.id !== b.id; }); renderChips(); renderBookings(); updateBadge(); })
+        .catch(function () { msg($('bkMsg'), 'err', 'Could not delete that request.'); });
+    });
+    body.appendChild(del);
+    item.appendChild(body);
+    return item;
+  }
+
+  $('testMailBtn').addEventListener('click', function () {
+    var b = this; b.disabled = true; clearMsg($('bkMsg'));
+    jpost('/api/test-email', {}).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (x) { if (x.ok && x.d.sent) msg($('bkMsg'), 'ok', 'Test email sent. Check your inbox (and spam folder).'); else msg($('bkMsg'), 'err', 'Test email failed: ' + (x.d.error || 'unknown reason')); })
+      .catch(function () { msg($('bkMsg'), 'err', 'Could not reach the site to send the test.'); }).then(function () { b.disabled = false; });
+  });
+
+  $('csvBtn').addEventListener('click', function () {
+    var q = function (v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; };
+    var cols = ['Reference', 'Received', 'Status', 'Service', 'Name', 'Phone', 'Email', 'Contact by', 'Budget', 'Details', 'Notes'];
+    var rows = bookings.map(function (b) {
+      var budget = (b.answers.filter(function (a) { return a.label === 'Budget'; })[0] || {}).value || '';
+      var details = b.answers.filter(function (a) { return a.label !== 'Budget'; }).map(function (a) { return a.label + ': ' + a.value; }).join(' | ');
+      return [b.id, when(b.createdAt), STATUS[b.status] || b.status, b.serviceLabel, b.name, b.phone, b.email, b.method, budget, details, b.note].map(q).join(',');
+    });
+    var blob = new Blob(['\ufeff' + [cols.map(q).join(',')].concat(rows).join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'turn8digital-bookings.csv';
+    document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  });
+
+  /* ====================== PHOTOS ====================== */
   var drop = $('drop'), fileInput = $('file');
   drop.addEventListener('click', function () { fileInput.click(); });
   drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('over'); });
@@ -191,41 +398,29 @@
     Array.prototype.forEach.call(list, function (file) {
       if (!/^image\//.test(file.type)) return;
       var item = { file: file, state: 'ready' };
-      var el = document.createElement('div'); el.className = 'q-item';
+      var row = document.createElement('div'); row.className = 'q-item';
       var img = document.createElement('img'); img.alt = '';
       item.url = URL.createObjectURL(file); img.src = item.url;
       var fields = document.createElement('div'); fields.className = 'q-fields';
-      item.title = document.createElement('input'); item.title.type = 'text'; item.title.maxLength = 80;
-      item.title.placeholder = 'Title (optional), e.g. Noor Cafe website';
-      item.caption = document.createElement('input'); item.caption.type = 'text'; item.caption.maxLength = 240;
-      item.caption.placeholder = 'Short caption (optional)';
+      item.title = document.createElement('input'); item.title.type = 'text'; item.title.maxLength = 80; item.title.placeholder = 'Title (optional), e.g. Noor Cafe website';
+      item.caption = document.createElement('input'); item.caption.type = 'text'; item.caption.maxLength = 240; item.caption.placeholder = 'Short caption (optional)';
       fields.appendChild(item.title); fields.appendChild(item.caption);
       var side = document.createElement('div');
       item.status = document.createElement('div'); item.status.className = 'q-state'; item.status.textContent = 'Ready';
-      item.remove = document.createElement('button'); item.remove.type = 'button'; item.remove.className = 'q-remove';
-      item.remove.setAttribute('aria-label', 'Remove'); item.remove.innerHTML = '&times;';
-      item.remove.addEventListener('click', function () {
-        URL.revokeObjectURL(item.url);
-        queue = queue.filter(function (q) { return q !== item; });
-        el.remove(); refreshButton();
-      });
+      item.remove = document.createElement('button'); item.remove.type = 'button'; item.remove.className = 'q-remove'; item.remove.setAttribute('aria-label', 'Remove'); item.remove.innerHTML = '&times;';
+      item.remove.addEventListener('click', function () { URL.revokeObjectURL(item.url); queue = queue.filter(function (q) { return q !== item; }); row.remove(); refreshButton(); });
       side.appendChild(item.status); side.appendChild(item.remove);
-      el.appendChild(img); el.appendChild(fields); el.appendChild(side);
-      item.el = el; queue.push(item); $('queue').appendChild(el);
+      row.appendChild(img); row.appendChild(fields); row.appendChild(side);
+      item.el = row; queue.push(item); $('queue').appendChild(row);
     });
     refreshButton();
   }
   function refreshButton() {
     var n = queue.filter(function (q) { return q.state !== 'done'; }).length;
-    $('uploadBtn').disabled = n === 0;
-    $('uploadBtn').textContent = n > 1 ? 'Upload ' + n + ' photos' : 'Upload photo';
+    $('uploadBtn').disabled = n === 0; $('uploadBtn').textContent = n > 1 ? 'Upload ' + n + ' photos' : 'Upload photo';
   }
-
-  // ---------- shrink a photo before uploading ----------
   function loadBitmap(file) {
-    if (window.createImageBitmap) {
-      return createImageBitmap(file, { imageOrientation: 'from-image' }).catch(function () { return viaImage(file); });
-    }
+    if (window.createImageBitmap) return createImageBitmap(file, { imageOrientation: 'from-image' }).catch(function () { return viaImage(file); });
     return viaImage(file);
   }
   function viaImage(file) {
@@ -238,42 +433,28 @@
   }
   function shrink(file) {
     return loadBitmap(file).then(function (bmp) {
-      var w0 = bmp.width || bmp.naturalWidth, h0 = bmp.height || bmp.naturalHeight;
-      var scale = Math.min(1, 1600 / Math.max(w0, h0));
+      var w0 = bmp.width || bmp.naturalWidth, h0 = bmp.height || bmp.naturalHeight, scale = Math.min(1, 1600 / Math.max(w0, h0));
       var w = Math.round(w0 * scale), h = Math.round(h0 * scale);
       var c = document.createElement('canvas'); c.width = w; c.height = h;
-      var ctx = c.getContext('2d');
-      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
-      ctx.drawImage(bmp, 0, 0, w, h);
-      return new Promise(function (resolve, reject) {
-        c.toBlob(function (b) { b ? resolve(b) : reject(new Error('encode')); }, 'image/jpeg', 0.85);
-      });
+      var ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); ctx.drawImage(bmp, 0, 0, w, h);
+      return new Promise(function (resolve, reject) { c.toBlob(function (b) { b ? resolve(b) : reject(new Error('encode')); }, 'image/jpeg', 0.85); });
     });
   }
-
-  // ---------- upload ----------
   function uploadOne(item, category) {
     item.status.className = 'q-state'; item.status.textContent = 'Resizing…';
     return shrink(item.file).then(function (blob) {
       item.status.textContent = 'Uploading…';
-      var fd = new FormData();
-      fd.append('file', blob, 'photo.jpg');
-      fd.append('category', category);
-      fd.append('title', item.title.value);
-      fd.append('caption', item.caption.value);
+      var fd = new FormData(); fd.append('file', blob, 'photo.jpg'); fd.append('category', category); fd.append('title', item.title.value); fd.append('caption', item.caption.value);
       return api('/api/upload', { method: 'POST', body: fd });
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (d) {
         if (!r.ok) throw new Error(d.error || ('Error ' + r.status));
         item.state = 'done'; item.status.className = 'q-state done'; item.status.textContent = 'Done ✓';
-        item.remove.hidden = true; item.title.disabled = true; item.caption.disabled = true;
-        return true;
+        item.remove.hidden = true; item.title.disabled = true; item.caption.disabled = true; return true;
       });
     }).catch(function (err) {
       item.state = 'ready'; item.status.className = 'q-state fail';
-      item.status.textContent = (err && err.message === 'unreadable') ? 'Cannot read' : 'Failed';
-      item.status.title = err && err.message;
-      return false;
+      item.status.textContent = (err && err.message === 'unreadable') ? 'Cannot read' : 'Failed'; item.status.title = err && err.message; return false;
     });
   }
   $('uploadBtn').addEventListener('click', function () {
@@ -282,46 +463,32 @@
     if (!todo.length) return;
     var category = $('cat').value, ok = 0, bad = 0;
     $('uploadBtn').disabled = true; clearMsg($('uploadMsg'));
-    todo.reduce(function (p, item) {
-      return p.then(function () { return uploadOne(item, category); }).then(function (good) { good ? ok++ : bad++; });
-    }, Promise.resolve()).then(function () {
+    todo.reduce(function (p, item) { return p.then(function () { return uploadOne(item, category); }).then(function (good) { good ? ok++ : bad++; }); }, Promise.resolve()).then(function () {
       if (bad === 0) {
         msg($('uploadMsg'), 'ok', ok + (ok === 1 ? ' photo is' : ' photos are') + ' now live on your site.');
-        // clear finished rows after a moment
-        setTimeout(function () {
-          queue = queue.filter(function (q) { if (q.state === 'done') { URL.revokeObjectURL(q.url); q.el.remove(); return false; } return true; });
-          refreshButton();
-        }, 1500);
+        setTimeout(function () { queue = queue.filter(function (q) { if (q.state === 'done') { URL.revokeObjectURL(q.url); q.el.remove(); return false; } return true; }); refreshButton(); }, 1500);
       } else {
         msg($('uploadMsg'), 'err', ok + ' uploaded, ' + bad + ' failed. Check your connection and press Upload again to retry the failed ones. If a photo says "Cannot read", try a JPG or PNG version of it.');
       }
       refreshButton(); loadLibrary();
     });
   });
-
-  // ---------- library ----------
   function loadLibrary() {
     api('/api/gallery').then(function (r) { if (!r.ok) throw new Error(); return r.json(); }).then(function (d) {
-      var items = d.items || [], lib = $('lib');
-      lib.innerHTML = '';
-      $('libEmpty').hidden = items.length > 0;
-      $('count').textContent = items.length ? '(' + items.length + ')' : '';
+      var items = d.items || [], lib = $('lib'); lib.innerHTML = '';
+      $('libEmpty').hidden = items.length > 0; $('count').textContent = items.length ? '(' + items.length + ')' : '';
       items.forEach(function (it) {
-        var card = document.createElement('div'); card.className = 'lib-item';
+        var card = el('div', 'lib-item');
         var img = document.createElement('img'); img.src = '/api/image/' + it.id; img.loading = 'lazy'; img.alt = it.title || 'Project photo';
-        var meta = document.createElement('div'); meta.className = 'lib-meta';
-        var b = document.createElement('b'); b.textContent = it.title || 'Untitled';
-        var sp = document.createElement('span'); sp.textContent = LABELS[it.category] || 'Other';
-        var del = document.createElement('button'); del.type = 'button'; del.className = 'lib-del'; del.textContent = 'Delete';
+        var meta = el('div', 'lib-meta'); meta.appendChild(el('b', null, it.title || 'Untitled')); meta.appendChild(el('span', null, CAT[it.category] || 'Other')); meta.appendChild(document.createElement('br'));
+        var del = el('button', 'lib-del', 'Delete'); del.type = 'button';
         del.addEventListener('click', function () {
           if (!confirm('Remove this photo from your site? This cannot be undone.')) return;
           del.disabled = true; clearMsg($('libMsg'));
-          api('/api/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: it.id }) })
-            .then(function (r) { if (!r.ok) throw new Error(); loadLibrary(); })
+          jpost('/api/delete', { id: it.id }).then(function (r) { if (!r.ok) throw new Error(); loadLibrary(); })
             .catch(function () { del.disabled = false; msg($('libMsg'), 'err', 'Could not delete that photo. Please try again.'); });
         });
-        meta.appendChild(b); meta.appendChild(sp); meta.appendChild(document.createElement('br')); meta.appendChild(del);
-        card.appendChild(img); card.appendChild(meta); lib.appendChild(card);
+        meta.appendChild(del); card.appendChild(img); card.appendChild(meta); lib.appendChild(card);
       });
     }).catch(function () { msg($('libMsg'), 'err', 'Could not load your photos right now.'); });
   }

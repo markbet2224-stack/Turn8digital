@@ -28,7 +28,7 @@
   var recentGrid = document.getElementById('recentGrid');
   if (!freshGrid && !recentGrid) return;
 
-  var LABELS = { website: 'Websites', event: 'Event coverage', other: 'Other' };
+  var LABELS = { website: 'Websites', event: 'Event coverage', design: 'Graphic design', other: 'Other' };
 
   var box = document.createElement('div');
   box.className = 'lightbox';
