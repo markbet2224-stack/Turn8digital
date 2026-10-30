@@ -321,7 +321,7 @@
     // contact buttons
     var acts = el('div', 'bk-actions');
     var wa = waNumber(b.phone);
-    var greet = 'Hi ' + b.name.split(' ')[0] + ', this is Mark from Turn8digital about your ' + b.serviceLabel.toLowerCase() + ' request (' + b.id + ').';
+    var greet = 'Hi ' + b.name.split(' ')[0] + ', this is Turn8digital about your ' + b.serviceLabel.toLowerCase() + ' request (' + b.id + ').';
     if (wa) { var a1 = el('a', 'wa', 'WhatsApp'); a1.href = 'https://wa.me/' + wa + '?text=' + encodeURIComponent(greet); a1.target = '_blank'; a1.rel = 'noopener'; acts.appendChild(a1); }
     if (b.phone) { var a2 = el('a', null, 'Call'); a2.href = 'tel:' + b.phone.replace(/[^\d+]/g, ''); acts.appendChild(a2); }
     if (b.email) { var a3 = el('a', null, 'Email'); a3.href = 'mailto:' + b.email + '?subject=' + encodeURIComponent('Your ' + b.serviceLabel + ' request (' + b.id + ')'); acts.appendChild(a3); }

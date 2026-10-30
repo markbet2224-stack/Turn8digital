@@ -950,3 +950,25 @@
     .bk-done{padding:28px;}
     .bk-sum div{grid-template-columns:1fr; gap:2px;}
   }
+
+
+  /* numbers typed freely + "something else" box + backup route */
+  .bk-num{display:flex; align-items:stretch; max-width:340px;}
+  .bk-num input{flex:1; min-width:0;}
+  .bk-num .pre, .bk-num .suf{display:flex; align-items:center; padding:0 14px; background:#F1EBDC; border:1px solid rgba(22,33,31,0.2); color:var(--ink-600); font-size:14px; white-space:nowrap;}
+  .bk-num .pre{border-right:none; border-radius:12px 0 0 12px;}
+  .bk-num .suf{border-left:none; border-radius:0 12px 12px 0;}
+  .bk-num.has-pre input{border-radius:0 12px 12px 0 !important;}
+  .bk-num.has-suf input{border-radius:12px 0 0 12px !important;}
+  .bk-num.has-pre.has-suf input{border-radius:0 !important;}
+  .bk-field.invalid .bk-num input{border-color:#C0392B;}
+  .bk-other{margin-top:10px;}
+  .bk-fallback{display:none; margin-top:18px; padding:18px 20px; border-radius:14px; background:#FFF4D6; color:#5A430A; font-size:14.5px; line-height:1.55;}
+  .bk-fallback.show{display:block;}
+  .bk-fallback p{margin:6px 0 14px;}
+  .bk-fb-actions{display:flex; gap:12px; flex-wrap:wrap;}
+
+  .bk-fallback .btn-ghost{color:var(--teal-900); border-color:var(--teal-900); background:transparent;}
+  .bk-fallback .btn-ghost:hover{background:rgba(11,46,43,0.08);}
+
+  @media (max-width:820px){ .bk-row{gap:0;} }

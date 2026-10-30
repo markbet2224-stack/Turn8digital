@@ -37,13 +37,13 @@
   <div class="wrap">
     <p class="eyebrow gold">Book a service</p>
     <h1>Tell us what you need, <em>we'll take it from there.</em></h1>
-    <p class="sub">Pick one service, answer a few questions, and I'll get back to you to confirm the details.</p>
+    <p class="sub">Pick one service, answer a few questions, and we'll get back to you to confirm the details.</p>
   </div>
 </section>
 
 <section class="bk">
   <div class="wrap">
-    <noscript><p class="bk-hint">This form needs JavaScript. You can still reach me on <a href="https://wa.me/254768633370">WhatsApp</a> or at turn8digital@gmail.com.</p></noscript>
+    <noscript><p class="bk-hint">This form needs JavaScript. You can still reach us on <a href="https://wa.me/254768633370">WhatsApp</a> or at turn8digital@gmail.com.</p></noscript>
 
     <div class="bk-steps" id="bkSteps" aria-hidden="true">
       <div class="bk-step on" data-s="1"><span class="dot">1</span> Choose</div>
@@ -62,11 +62,12 @@
       <div id="bkGroups"></div>
       <p class="hp"><label>Leave this empty <input type="text" name="website" id="bkHp" tabindex="-1" autocomplete="off"></label></p>
       <div class="bk-alert" id="bkAlert" role="alert"></div>
+      <div class="bk-fallback" id="bkFallback" role="alert"></div>
       <div class="bk-submit">
         <button class="btn-primary" type="submit" id="bkSend">Send booking request</button>
         <button class="bk-back" type="button" id="bkBack">← Choose a different service</button>
       </div>
-      <p class="bk-consent">This is a request, not a confirmed booking. I'll contact you to agree on the details, timing and price. By sending it you agree that I may contact you using the details above. I only use them to reply to you.</p>
+      <p class="bk-consent">This is a request, not a confirmed booking. We'll contact you to agree on the details, timing and price. By sending it you agree that we may contact you using the details above. We only use them to reply to you.</p>
     </form>
 
     <div class="bk-done" id="bkDone" hidden role="status"></div>
@@ -91,7 +92,7 @@
 <script>
 (function () {
   'use strict';
-  var WA = '254768633370';
+  var WA = '254768633370', MAIL = 'turn8digital@gmail.com';
   var SERVICES = [
     { key: 'web', n: '01', title: 'Web development', blurb: 'Business sites, personal sites, portfolios and landing pages.' },
     { key: 'refresh', n: '02', title: 'Refresh & fixes', blurb: 'Bring an existing site up to date: faster, sharper, working properly.' },
@@ -99,26 +100,31 @@
     { key: 'events', n: '04', title: 'Event coverage', blurb: 'Photography and videography with a professional edit.' },
     { key: 'design', n: '05', title: 'Graphic design', blurb: 'Posters, campaigns, images and business cards.', badge: 'New' }
   ];
+  // any option starting like this opens a "please describe" box
+  var ELSE = /^(something else|somewhere else|other)\b/i;
+  var plural = function (n, one, many) { return n + ' ' + (n === 1 ? one : many); };
 
-  /* ---- questions: edit or add here. type: text | textarea | select | radio | checks | date | time ---- */
+  /* ---- questions: edit or add here.
+     type: text | textarea | select | radio | checks | date | time | number
+     number options: unit (shown after the box), prefix, decimal, money, min, max, fmt ---- */
   var Q = {
     web: [
-      { id: 'w_type', label: 'What kind of website do you need?', type: 'select', required: true, options: ['Business website', 'Personal website or portfolio', 'CV or one-page profile', 'Landing page for a launch or promotion', 'Something else (tell me below)'] },
-      { id: 'w_goal', label: "What's the main goal of the site?", type: 'textarea', required: true, ph: 'For example: get more customers, show my work, share information about an event' },
-      { id: 'w_domain', label: 'Do you already have a domain name (like yourname.com)?', type: 'radio', options: ['No', 'Yes', "I'm not sure what that is"] },
-      { id: 'w_pages', label: 'How many pages do you think you need?', type: 'select', options: ['1 page', '2 to 4 pages', '5 to 8 pages', '9 or more', 'Not sure yet'] },
-      { id: 'w_features', label: 'What should visitors be able to do?', type: 'checks', options: ['Contact me or send a message', 'Message me on WhatsApp', 'See photos or a gallery', 'Read about me or my story', 'See prices or a menu', 'Book or order', 'Something else'] },
-      { id: 'w_ready', label: 'What do you already have ready?', type: 'checks', options: ['Logo', 'Brand colours', 'Photos', 'Written text', 'None yet'] },
+      { id: 'w_type', label: 'What kind of website do you need?', type: 'select', required: true, options: ['Business website', 'Personal website or portfolio', 'CV or one-page profile', 'Landing page for a launch or promotion', 'Something else'] },
+      { id: 'w_goal', label: "What's the main goal of the site?", type: 'textarea', required: true, ph: 'For example: get more customers, showcase work, share information about an event' },
+      { id: 'w_domain', label: 'Is there already a domain name (like yourname.com)?', type: 'radio', options: ['No', 'Yes', 'Not sure what that is'] },
+      { id: 'w_pages', label: 'How many pages do you think you need? (optional)', type: 'number', unit: 'pages', min: 1, max: 200, fmt: function (n) { return plural(n, 'page', 'pages'); } },
+      { id: 'w_features', label: 'What should visitors be able to do?', type: 'checks', options: ['Get in touch or send a message', 'Chat on WhatsApp', 'See photos or a gallery', 'Read about the business or person', 'See prices or a menu', 'Book or order', 'Something else'] },
+      { id: 'w_ready', label: 'What is already available?', type: 'checks', options: ['Logo', 'Brand colours', 'Photos', 'Written text', 'None yet'] },
       { id: 'w_like', label: 'Websites you like (optional)', type: 'text', ph: 'Links or names of sites you admire' }
     ],
     refresh: [
-      { id: 'r_url', label: 'Link to your current website', type: 'text', required: true, ph: 'e.g. www.yourwebsite.com' },
+      { id: 'r_url', label: 'Link to the current website', type: 'text', required: true, ph: 'e.g. www.yourwebsite.com' },
       { id: 'r_change', label: 'What would you like to change?', type: 'checks', required: true, options: ['A fresh new design', 'Faster loading', 'Fix broken pages or links', 'Make it work better on phones', 'Update text, prices or photos', 'Add new pages or features', 'Something else'] },
-      { id: 'r_access', label: 'Do you still have access to it (hosting, domain, logins)?', type: 'radio', options: ['Yes', 'No', 'Not sure'] },
+      { id: 'r_access', label: 'Is there still access to it (hosting, domain, logins)?', type: 'radio', options: ['Yes', 'No', 'Not sure'] },
       { id: 'r_notes', label: "What's bothering you most about it right now? (optional)", type: 'textarea' }
     ],
     care: [
-      { id: 'c_url', label: 'Link to your website', type: 'text', required: true, ph: 'e.g. www.yourwebsite.com' },
+      { id: 'c_url', label: 'Link to the website', type: 'text', required: true, ph: 'e.g. www.yourwebsite.com' },
       { id: 'c_need', label: 'What do you need help with?', type: 'checks', required: true, options: ['Updating text, prices or photos', 'Adding new pages or sections', 'Fixing issues as they come up', 'Regular check-ups', 'Something else'] },
       { id: 'c_freq', label: 'How often do you expect to need changes?', type: 'radio', options: ['Just once', 'Now and then', 'Monthly', 'Weekly'] },
       { id: 'c_built', label: 'Did Turn8digital build the site?', type: 'radio', options: ['Yes', 'No', 'Not sure'] }
@@ -127,27 +133,25 @@
       { id: 'e_type', label: 'What type of event is it?', type: 'select', required: true, options: ['Wedding', 'Birthday or celebration', 'Corporate event or launch', 'Graduation', 'Reunion or gathering', 'Church or community event', 'Something else'] },
       { id: 'e_date', label: 'Event date', type: 'date', required: true },
       { id: 'e_time', label: 'Start time (optional)', type: 'time' },
-      { id: 'e_dur', label: 'About how long will it last?', type: 'select', options: ['Under 2 hours', '2 to 4 hours', '4 to 8 hours', 'A full day', 'Not sure'] },
+      { id: 'e_dur', label: 'How long will the event last? (optional)', type: 'number', unit: 'hours', decimal: true, min: 0.5, max: 72, fmt: function (n) { return plural(n, 'hour', 'hours'); } },
       { id: 'e_venue', label: 'Venue or location', type: 'text', required: true, ph: 'Venue name and town' },
-      { id: 'e_cover', label: 'What do you need covered?', type: 'radio', required: true, options: ['Photos only', 'Video only', 'Photos and video'] },
+      { id: 'e_cover', label: 'What needs to be covered?', type: 'radio', required: true, options: ['Photos only', 'Video only', 'Photos and video'] },
       { id: 'e_get', label: 'What would you like to receive?', type: 'checks', options: ['Edited photo gallery', 'Highlight video', 'Full-length video', 'Short clips for social media', 'Not sure yet'] },
-      { id: 'e_guests', label: 'Roughly how many guests?', type: 'select', options: ['Under 20', '20 to 50', '50 to 100', '100 to 300', 'More than 300'] },
-      { id: 'e_deliver', label: 'When do you need the finished photos or videos?', type: 'select', options: ['Within a week', 'Within two weeks', 'Within a month', 'No rush'] },
+      { id: 'e_guests', label: 'Roughly how many guests? (optional)', type: 'number', unit: 'guests', min: 1, max: 100000, fmt: function (n) { return n.toLocaleString('en-US') + ' guests'; } },
+      { id: 'e_deliver', label: 'Date the finished photos or videos are needed by (optional)', type: 'date' },
       { id: 'e_must', label: 'Any must-have moments, people or shots? (optional)', type: 'textarea' }
     ],
     design: [
       { id: 'd_what', label: 'What would you like designed?', type: 'checks', required: true, options: ['Poster or flyer', 'Social media images', 'A campaign (several matching designs)', 'Business cards', 'Something else'] },
       { id: 'd_for', label: "What's it for?", type: 'text', required: true, ph: 'The occasion, business or message' },
       { id: 'd_use', label: 'Where will it be used?', type: 'checks', options: ['Printed', 'Social media', 'Website', 'Somewhere else'] },
-      { id: 'd_count', label: 'How many designs do you need?', type: 'select', options: ['1', '2 to 3', '4 to 10', 'More than 10', 'Not sure'] },
+      { id: 'd_count', label: 'How many designs are needed? (optional)', type: 'number', unit: 'designs', min: 1, max: 500, fmt: function (n) { return String(n); } },
       { id: 'd_size', label: 'Print size, if printing (optional)', type: 'text', ph: 'For example A4, A3, business card' },
-      { id: 'd_brand', label: 'Do you already have a logo or brand colours?', type: 'radio', options: ["Yes, I'll send them", 'Partly', 'No'] },
+      { id: 'd_brand', label: 'Is there already a logo or brand colours?', type: 'radio', options: ['Yes, will share them', 'Partly', 'No'] },
       { id: 'd_text', label: 'Text and details to include', type: 'textarea', ph: 'Names, dates, phone numbers, prices, anything that must appear' },
-      { id: 'd_style', label: 'Style or inspiration (optional)', type: 'textarea', ph: 'Describe the look you want, or paste links to designs you like' }
+      { id: 'd_style', label: 'Style or inspiration (optional)', type: 'textarea', ph: 'Describe the look wanted, or paste links to designs you like' }
     ]
   };
-  var WHEN = ['As soon as possible', 'Within two weeks', 'Within a month', 'No rush'];
-  var BUDGET = ["I'd rather discuss it", 'Under KSh 5,000', 'KSh 5,000 to 15,000', 'KSh 15,000 to 40,000', 'Above KSh 40,000'];
 
   /* ---- tiny helpers ---- */
   function h(tag, attrs) {
@@ -166,17 +170,31 @@
   }
   var $ = function (id) { return document.getElementById(id); };
   var today = new Date(); today = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+  function niceDate(iso) { try { return new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return iso; } }
+  function numVal(def, raw) {
+    var s = String(raw == null ? '' : raw).replace(/,/g, '').trim();
+    if (!s) return null;
+    var n = def.decimal ? parseFloat(s) : parseInt(s, 10);
+    return /^\d+(\.\d+)?$/.test(s) ? n : NaN;
+  }
 
-  /* ---- field builder: returns { el, def, get(), setInvalid(msg) } ---- */
+  /* ---- field builder: returns { el, def, get(), check(), setInvalid(msg), focus() } ---- */
   var uid = 0;
   function build(def) {
     var id = 'q_' + def.id + '_' + (uid++);
     var wrap = h('div', { class: 'bk-field', 'data-id': def.id });
     var err = h('div', { class: 'bk-err', id: id + '_e' });
     var labelText = def.label + (def.required ? ' *' : '');
-    var get, input;
+    var get, input, inputs = [], elseOpt = (def.options || []).filter(function (o) { return ELSE.test(o); })[0];
+    var other = null;
+    if (elseOpt) {
+      other = h('input', { type: 'text', class: 'bk-other', maxlength: 200, placeholder: 'Please describe what you mean', 'aria-label': 'Describe: ' + def.label });
+      other.style.display = 'none';
+    }
+    var elseSelected = function () { return false; };
+
     if (def.type === 'radio' || def.type === 'checks') {
-      var kind = def.type === 'radio' ? 'radio' : 'checkbox', inputs = [];
+      var kind = def.type === 'radio' ? 'radio' : 'checkbox';
       var box = h('div', { class: 'opts', role: def.type === 'radio' ? 'radiogroup' : 'group', 'aria-labelledby': id + '_l' });
       def.options.forEach(function (o) {
         var inp = h('input', { type: kind, name: id, value: o });
@@ -184,70 +202,112 @@
         inputs.push(inp); box.appendChild(h('label', { class: 'opt' }, inp, h('span', { text: o })));
       });
       wrap.appendChild(h('div', { class: 'lbl', id: id + '_l', text: labelText })); wrap.appendChild(box);
+      elseSelected = function () { return inputs.some(function (i) { return i.checked && ELSE.test(i.value); }); };
       get = function () {
-        var v = inputs.filter(function (i) { return i.checked; }).map(function (i) { return i.value; });
+        var t = other ? other.value.trim() : '';
+        var v = inputs.filter(function (i) { return i.checked; }).map(function (i) { return ELSE.test(i.value) && t ? i.value + ': ' + t : i.value; });
         return def.type === 'radio' ? (v[0] || '') : v;
       };
+    } else if (def.type === 'number') {
+      wrap.appendChild(h('label', { class: 'lbl', for: id, text: labelText }));
+      if (def.help) wrap.appendChild(h('div', { class: 'help', text: def.help }));
+      input = h('input', { id: id, type: 'text', inputmode: def.decimal ? 'decimal' : 'numeric', autocomplete: 'off', maxlength: 14 });
+      var holder = h('div', { class: 'bk-num' + (def.prefix ? ' has-pre' : '') + (def.unit ? ' has-suf' : '') });
+      if (def.prefix) holder.appendChild(h('span', { class: 'pre', text: def.prefix }));
+      holder.appendChild(input);
+      if (def.unit) holder.appendChild(h('span', { class: 'suf', text: def.unit }));
+      wrap.appendChild(holder);
+      // digits only (one decimal point where allowed)
+      input.addEventListener('input', function () {
+        var v = input.value;
+        input.value = def.decimal ? v.replace(/[^\d.]/g, '').replace(/^(\d*\.?\d*).*$/, '$1') : v.replace(/[^\d]/g, '');
+      });
+      if (def.money) {
+        input.addEventListener('blur', function () { var d = input.value.replace(/\D/g, ''); if (d) input.value = Number(d).toLocaleString('en-US'); });
+        input.addEventListener('focus', function () { input.value = input.value.replace(/,/g, ''); });
+      }
+      get = function () { var n = numVal(def, input.value); return (n === null || isNaN(n)) ? '' : def.fmt(n); };
     } else {
       wrap.appendChild(h('label', { class: 'lbl', for: id, text: labelText }));
       if (def.type === 'textarea') input = h('textarea', { id: id, placeholder: def.ph || '' });
       else if (def.type === 'select') {
         input = h('select', { id: id }, h('option', { value: '', text: 'Choose…' }), def.options.map(function (o) { return h('option', { value: o, text: o }); }));
+        elseSelected = function () { return ELSE.test(input.value); };
       } else {
         input = h('input', { id: id, type: def.type === 'date' ? 'date' : def.type === 'time' ? 'time' : def.type === 'tel' ? 'tel' : def.type === 'email' ? 'email' : 'text', placeholder: def.ph || '', maxlength: def.max || (def.type === 'text' ? 150 : null), autocomplete: def.ac || null });
         if (def.type === 'date') input.min = today;
       }
       if (def.help) wrap.appendChild(h('div', { class: 'help', text: def.help }));
       wrap.appendChild(input);
-      get = function () { return input.value.trim(); };
+      get = function () {
+        var v = input.value.trim();
+        if (other && v && ELSE.test(v)) { var t = other.value.trim(); return t ? v + ': ' + t : v; }
+        return v;
+      };
     }
+    if (other) wrap.appendChild(other);
     wrap.appendChild(err);
+
+    var syncOther = function () {
+      if (!other) return;
+      var on = elseSelected(); other.style.display = on ? '' : 'none';
+      if (!on) other.value = '';
+    };
+    wrap.addEventListener('change', function () { syncOther(); api.setInvalid(''); });
+    wrap.addEventListener('input', function () { api.setInvalid(''); });
+
     var api = {
-      el: wrap, def: def, get: get,
+      el: wrap, def: def, get: get, wrap: wrap,
+      // returns a message when the answer is not acceptable ('' = fine)
+      check: function () {
+        if (other && elseSelected() && !other.value.trim()) return 'Please describe what you mean.';
+        if (def.type === 'number') {
+          var n = numVal(def, input.value);
+          if (n !== null && (isNaN(n) || n < def.min || n > def.max)) return def.err || ('Please enter a number between ' + def.min + ' and ' + def.max + '.');
+        }
+        if (def.type === 'date' && input.value && input.value < today) return 'Please choose a date that has not passed.';
+        return '';
+      },
       setInvalid: function (msg) {
         wrap.classList.toggle('invalid', !!msg); err.textContent = msg || '';
-        if (msg) input && input.setAttribute('aria-describedby', id + '_e'); else input && input.removeAttribute('aria-describedby');
+        var t = input || null; if (t) { if (msg) t.setAttribute('aria-describedby', id + '_e'); else t.removeAttribute('aria-describedby'); }
       },
-      focus: function () { var f = wrap.querySelector('input, select, textarea'); if (f) f.focus(); },
-      input: input, wrap: wrap
+      focus: function () {
+        var f = (other && elseSelected() && !other.value.trim()) ? other : wrap.querySelector('input, select, textarea');
+        if (f) f.focus();
+      }
     };
-    wrap.addEventListener('input', function () { api.setInvalid(''); });
-    wrap.addEventListener('change', function () { api.setInvalid(''); });
     return api;
   }
 
   /* ---- state ---- */
-  var selected = null, shownAt = 0, about = {}, serviceFields = [], timing = {}, extra = {}, groupsEl = $('bkGroups'), svcBox = null, dynEl = null;
+  var selected = null, shownAt = 0, about = {}, serviceFields = [], timing = {}, extra = {}, groupsEl = $('bkGroups'), dynEl = null, whenWrap = null;
 
   function group(title, hint) { var g = h('div', { class: 'bk-group' }, h('h3', { text: title })); if (hint) g.appendChild(h('p', { class: 'bk-hint', style: 'margin:4px 0 0', text: hint })); return g; }
 
   function buildStatic() {
     groupsEl.innerHTML = '';
-    // about you
-    var g1 = group('About you', 'Add a phone number, an email, or both, so I can reply.');
+    var g1 = group('About you', 'Add a phone number, an email, or both, so we can reply.');
     about.name = build({ id: 'name', label: 'Your name', type: 'text', required: true, max: 100, ac: 'name' });
     var row = h('div', { class: 'bk-row' });
     about.phone = build({ id: 'phone', label: 'Phone or WhatsApp number', type: 'tel', max: 30, ac: 'tel', ph: 'e.g. 0712 345 678' });
     about.email = build({ id: 'email', label: 'Email', type: 'email', max: 150, ac: 'email' });
     row.appendChild(about.phone.el); row.appendChild(about.email.el);
-    about.method = build({ id: 'method', label: 'How should I contact you?', type: 'radio', options: ['WhatsApp', 'Phone call', 'Email'], preset: 'WhatsApp' });
-    about.who = build({ id: 'who', label: "I'm booking as", type: 'radio', options: ['An individual', 'A business or organisation'], preset: 'An individual' });
+    about.method = build({ id: 'method', label: 'How should we contact you?', type: 'radio', options: ['WhatsApp', 'Phone call', 'Email'], preset: 'WhatsApp' });
+    about.who = build({ id: 'who', label: 'Booking as', type: 'radio', options: ['An individual', 'A business or organisation'], preset: 'An individual' });
     about.org = build({ id: 'org', label: 'Business or organisation name', type: 'text', max: 120 });
     about.org.el.style.display = 'none';
     about.who.el.addEventListener('change', function () { about.org.el.style.display = about.who.get() === 'A business or organisation' ? '' : 'none'; });
     [about.name.el, row, about.method.el, about.who.el, about.org.el].forEach(function (x) { g1.appendChild(x); });
     groupsEl.appendChild(g1);
-    // service-specific (filled by renderService)
     dynEl = h('div'); groupsEl.appendChild(dynEl);
-    // timing + budget
     var g3 = group('Timing and budget');
-    timing.when = build({ id: 'when', label: 'When do you need this?', type: 'select', required: true, options: WHEN });
-    timing.budget = build({ id: 'budget', label: 'Budget (optional)', type: 'select', options: BUDGET, help: 'My prices are flexible. This just helps me suggest the right option.' });
-    g3.appendChild(timing.when.el); g3.appendChild(timing.budget.el); svcBox = timing.when.el;
+    timing.when = build({ id: 'when', label: 'Date you need this by (optional)', type: 'date', help: 'Leave blank if there is no fixed date.' });
+    timing.budget = build({ id: 'budget', label: 'Budget (optional)', type: 'number', money: true, prefix: 'KSh', min: 1, max: 1000000000, err: 'Please enter an amount in KSh.', fmt: function (n) { return 'KSh ' + n.toLocaleString('en-US'); }, help: 'Our prices are flexible. A figure just helps us suggest the right option.' });
+    g3.appendChild(timing.when.el); g3.appendChild(timing.budget.el); whenWrap = timing.when.el;
     groupsEl.appendChild(g3);
-    // anything else
     var g4 = group('Anything else?');
-    extra.notes = build({ id: 'notes', label: 'Anything else I should know? (optional)', type: 'textarea' });
+    extra.notes = build({ id: 'notes', label: 'Anything else we should know? (optional)', type: 'textarea' });
     g4.appendChild(extra.notes.el); groupsEl.appendChild(g4);
   }
 
@@ -258,7 +318,7 @@
     serviceFields = Q[selected].map(build);
     serviceFields.forEach(function (f) { g.appendChild(f.el); });
     dynEl.appendChild(g);
-    svcBox.style.display = selected === 'events' ? 'none' : '';   // events already ask for a date
+    whenWrap.style.display = selected === 'events' ? 'none' : '';   // events already ask for a date
     $('bkPicked').textContent = s.n + '  ·  ' + s.title;
   }
 
@@ -270,8 +330,8 @@
 
   function choose(key, scroll) {
     var first = !selected; selected = key;
-    if (first) { buildStatic(); }
-    renderService();
+    if (first) buildStatic();
+    renderService(); clearFallback();
     $('bkForm').hidden = false; shownAt = Date.now(); setStep(2);
     $('bkLive').textContent = 'Form for ' + SERVICES.filter(function (x) { return x.key === key; })[0].title + ' is ready below.';
     if (scroll) setTimeout(function () { $('bkForm').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
@@ -296,61 +356,80 @@
   function validate() {
     var bad = [];
     function flag(f, msg) { f.setInvalid(msg); bad.push(f); }
-    var visible = serviceFields.concat([about.name, about.phone, about.email, about.method, about.who, about.org, timing.budget, extra.notes]);
-    if (selected !== 'events') visible.push(timing.when);
-    visible.forEach(function (f) { f.setInvalid(''); });
+    var optional = [timing.budget, extra.notes].concat(selected === 'events' ? [] : [timing.when]);
+    var all = serviceFields.concat([about.name, about.phone, about.email, about.method, about.who, about.org], optional);
+    all.forEach(function (f) { f.setInvalid(''); });
     if (about.name.get().length < 2) flag(about.name, 'Please enter your name.');
     var phone = about.phone.get(), email = about.email.get(), method = about.method.get();
     if (!phone && !email) { flag(about.phone, 'Add a phone number or an email.'); flag(about.email, 'Add a phone number or an email.'); }
     if (phone && (digits(phone).length < 9 || digits(phone).length > 15)) flag(about.phone, "That phone number doesn't look right.");
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) flag(about.email, "That email address doesn't look right.");
     if (!method) flag(about.method, 'Please choose one.');
-    else if (method === 'Email' && !email) flag(about.email, 'Add your email, or choose another way to be contacted.');
-    else if ((method === 'WhatsApp' || method === 'Phone call') && !phone) flag(about.phone, 'Add your number, or choose Email.');
+    else if (method === 'Email' && !email) flag(about.email, 'Add an email, or choose another way to be contacted.');
+    else if ((method === 'WhatsApp' || method === 'Phone call') && !phone) flag(about.phone, 'Add a number, or choose Email.');
     if (about.who.get() === 'A business or organisation' && !about.org.get()) flag(about.org, 'Please enter the name.');
     serviceFields.forEach(function (f) {
       var v = f.get(), empty = Array.isArray(v) ? !v.length : !v;
       if (f.def.required && empty) flag(f, f.def.type === 'checks' || f.def.type === 'radio' ? 'Please choose at least one.' : 'This one is needed.');
-      else if (f.def.type === 'date' && v && v < today) flag(f, 'Please choose a date that has not passed.');
+      else { var m = f.check(); if (m) flag(f, m); }
     });
-    if (selected !== 'events' && !timing.when.get()) flag(timing.when, 'Please choose one.');
+    optional.forEach(function (f) { var m = f.check(); if (m) flag(f, m); });
     return bad;
   }
   function collect() {
     var a = [];
     var add = function (label, v) { if (Array.isArray(v) ? v.length : v) a.push({ label: label, value: v }); };
+    var tidy = function (l) { return l.replace(/\s*\(optional\)$/, ''); };
     add('Booking as', about.who.get()); add('Business or organisation', about.org.get());
-    serviceFields.forEach(function (f) { add(f.def.label.replace(/\s*\(optional\)$/, ''), f.get()); });
-    if (selected !== 'events') add('Needed by', timing.when.get());
-    add('Budget', timing.budget.get() === BUDGET[0] ? '' : timing.budget.get());
-    if (timing.budget.get() === BUDGET[0]) add('Budget', 'Would rather discuss it');
+    serviceFields.forEach(function (f) { var v = f.get(); add(tidy(f.def.label), f.def.type === 'date' && v ? niceDate(v) : v); });
+    if (selected !== 'events') { var w = timing.when.get(); add('Needed by', w ? niceDate(w) : ''); }
+    add('Budget', timing.budget.get());
     add('Anything else', extra.notes.get());
     return a;
   }
 
+  function alertMsg(t) { var el = $('bkAlert'); el.textContent = t || ''; el.classList.toggle('show', !!t); }
+  function clearFallback() { var f = $('bkFallback'); f.classList.remove('show'); f.innerHTML = ''; }
   $('bkForm').addEventListener('input', function () { if (!document.querySelector('.bk-field.invalid')) alertMsg(''); });
   $('bkForm').addEventListener('change', function () { if (!document.querySelector('.bk-field.invalid')) alertMsg(''); });
-  function alertMsg(t) { var el = $('bkAlert'); el.textContent = t || ''; el.classList.toggle('show', !!t); }
+
+  // if the website's server can't be reached, nothing is lost: the answers go by WhatsApp or email instead
+  function summaryText(p, svc) {
+    var lines = ['Booking request: ' + svc.title, 'Name: ' + p.name];
+    if (p.phone) lines.push('Phone: ' + p.phone); if (p.email) lines.push('Email: ' + p.email); if (p.method) lines.push('Preferred contact: ' + p.method);
+    lines.push('', 'Details:');
+    p.answers.forEach(function (a) { lines.push(a.label + ': ' + (Array.isArray(a.value) ? a.value.join(', ') : a.value)); });
+    return lines.join('\n').slice(0, 1500);
+  }
+  function showFallback(p) {
+    var svc = SERVICES.filter(function (x) { return x.key === p.service; })[0], text = summaryText(p, svc);
+    var f = $('bkFallback'); f.innerHTML = '';
+    f.appendChild(h('strong', { text: "The website couldn't send this request just now." }));
+    f.appendChild(h('p', { text: 'Nothing is lost. Your answers are ready to send by WhatsApp or email instead, with one tap.' }));
+    f.appendChild(h('div', { class: 'bk-fb-actions' },
+      h('a', { class: 'btn-primary', target: '_blank', rel: 'noopener', href: 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text), text: 'Send via WhatsApp' }),
+      h('a', { class: 'btn-ghost', href: 'mailto:' + MAIL + '?subject=' + encodeURIComponent('Booking request: ' + svc.title + ' (' + p.name + ')') + '&body=' + encodeURIComponent(text), text: 'Send via email' })));
+    f.classList.add('show'); f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 
   $('bkForm').addEventListener('submit', function (e) {
-    e.preventDefault(); alertMsg('');
+    e.preventDefault(); alertMsg(''); clearFallback();
     var bad = validate();
     if (bad.length) { alertMsg('Please check the highlighted answers.'); bad[0].wrap.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(function () { bad[0].focus(); }, 350); return; }
     var btn = $('bkSend'); btn.disabled = true; btn.textContent = 'Sending…';
-    var answers = collect();
     var payload = {
       service: selected, name: about.name.get(), phone: about.phone.get(), email: about.email.get(), method: about.method.get(),
-      answers: answers, hp: $('bkHp').value, elapsed: Date.now() - shownAt
+      answers: collect(), hp: $('bkHp').value, elapsed: Date.now() - shownAt
     };
     fetch('/api/book', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
-      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (r) { return r.json().catch(function () { return null; }).then(function (d) { return { ok: r.ok, d: d }; }); })
       .then(function (res) {
-        if (!res.ok) throw new Error(res.d.error || 'Something went wrong.');
-        done(res.d, payload);
+        if (res.ok && res.d && res.d.id) { done(res.d, payload); return; }
+        var er = new Error((res.d && res.d.error) || 'unreachable'); er.api = !!(res.d && res.d.error); throw er;
       })
       .catch(function (err) {
-        var m = err && err.message && err.message !== 'Failed to fetch' ? err.message : 'That did not go through. Please try again, or message me on WhatsApp.';
-        alertMsg(m); btn.disabled = false; btn.textContent = 'Send booking request';
+        btn.disabled = false; btn.textContent = 'Send booking request';
+        if (err && err.api) alertMsg(err.message); else showFallback(payload);   // site reachable = real message; otherwise offer the backup route
       });
   });
 
@@ -361,17 +440,17 @@
     function row(k, v) { if (v) sum.appendChild(h('div', null, h('dt', { text: k }), h('dd', { text: v, style: 'margin:0;white-space:pre-wrap' }))); }
     row('Service', s.title); row('Name', p.name); row('Phone', p.phone); row('Email', p.email); row('Contact by', p.method);
     p.answers.forEach(function (a) { row(a.label, Array.isArray(a.value) ? a.value.join(', ') : a.value); });
-    var msg = 'Hi Mark, I just sent a booking request (' + res.id + ') for ' + s.title + '.';
+    var msg = "Hello Turn8digital, I'm confirming my booking request (" + res.id + ') for ' + s.title + '.';
     box.appendChild(h('p', { class: 'eyebrow gold', text: 'Request received' }));
     box.appendChild(h('h2', { text: 'Thank you, ' + p.name.split(' ')[0] + '.' }));
     box.appendChild(h('div', { class: 'ref', text: res.id }));
-    box.appendChild(h('p', { class: 'small', text: 'Your reference number. Keep it handy if you message me about this request.' }));
+    box.appendChild(h('p', { class: 'small', text: 'Your reference number. Keep it handy if you message us about this request.' }));
     box.appendChild(h('ol', null,
-      h('li', { text: "I'll review your request and your answers." }),
-      h('li', { text: "I'll contact you by " + (p.method ? p.method.toLowerCase() : 'your chosen method') + ' to confirm the details, timing and price.' }),
-      h('li', { text: "Once we agree, we get started." })));
+      h('li', { text: "We'll review your request and your answers." }),
+      h('li', { text: "We'll contact you by " + (p.method ? p.method.toLowerCase() : 'your chosen method') + ' to confirm the details, timing and price.' }),
+      h('li', { text: 'Once everything is agreed, we get started.' })));
     box.appendChild(h('div', { class: 'bk-done-actions' },
-      h('a', { class: 'btn-primary', href: 'https://wa.me/' + WA + '?text=' + encodeURIComponent(msg), target: '_blank', rel: 'noopener', text: 'Message me on WhatsApp too' }),
+      h('a', { class: 'btn-primary', href: 'https://wa.me/' + WA + '?text=' + encodeURIComponent(msg), target: '_blank', rel: 'noopener', text: 'Confirm via WhatsApp' }),
       h('a', { class: 'btn-ghost', href: 'book.html', text: 'Send another request' })));
     box.appendChild(sum);
     box.hidden = false; $('bkForm').hidden = true; $('bkPick').hidden = true; setStep(3);
