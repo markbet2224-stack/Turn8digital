@@ -178,7 +178,7 @@ async function book(req, context) {
   const name = clean(body.name, 100), phone = clean(body.phone, 30), email = clean(body.email, 150);
   if (name.length < 2) return json({ error: "Please enter your name." }, 400);
   const digits = phone.replace(/\D/g, "");
-  if (!phone && !email) return json({ error: "Please give a phone number or an email so I can reply." }, 400);
+  if (!phone && !email) return json({ error: "Please give a phone number or an email so we can reply." }, 400);
   if (phone && (digits.length < 9 || digits.length > 15)) return json({ error: "That phone number doesn't look right." }, 400);
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return json({ error: "That email address doesn't look right." }, 400);
   const method = ["WhatsApp", "Phone call", "Email"].includes(body.method) ? body.method : "";
@@ -197,7 +197,7 @@ async function book(req, context) {
   const limits = (await s.get("ratelimit", { type: "json" })) || {};
   for (const k of Object.keys(limits)) { limits[k] = limits[k].filter((t) => now - t < 3600e3); if (!limits[k].length) delete limits[k]; }
   const mine = limits[key] || [];
-  if (mine.length >= 5) return json({ error: "You've sent several requests already. Please try again later, or message me on WhatsApp." }, 429);
+  if (mine.length >= 5) return json({ error: "You've sent several requests already. Please try again later, or message us on WhatsApp." }, 429);
   limits[key] = [...mine, now];
   await s.setJSON("ratelimit", limits);
 
